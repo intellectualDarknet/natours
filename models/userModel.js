@@ -1,3 +1,4 @@
+const Jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -20,7 +21,9 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide your password'],
-    minlength: 8
+    minlength: 8,
+    // The password will not return in Schema.find() methods (when we read from DB)!
+    select: false
   },
   passwordConfirm: {
     type: String,
@@ -47,5 +50,24 @@ userSchema.pre('save', async function(next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+// adding method to all instances(documents) from db
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
+  // this.password is unawailable bcause of select: false
+
+  // return true or false
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.createToken = function() {
+  // this.password is unawailable bcause of select: false
+  const value = this._id;
+  return Jwt.sign({ value }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN
+  });
+};
 
 module.exports = mongoose.model('User', userSchema);
