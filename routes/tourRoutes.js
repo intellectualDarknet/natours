@@ -1,26 +1,29 @@
 const express = require('express');
-const tourController = require('./../controllers/tourController');
+const AuthController = require('../controllers/authController');
+const TourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
-// router.param('id', tourController.checkID);
+// router.param('id', TourController.checkID);
 
 router
   .route('/top-5-cheap')
-  .get(tourController.aliasTopTours, tourController.getAllTours);
+  .get(TourController.aliasTopTours, TourController.getAllTours);
 
-router.route('/tour-stats').get(tourController.getTourStats);
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router.route('/tour-stats').get(TourController.getTourStats);
+router.route('/monthly-plan/:year').get(TourController.getMonthlyPlan);
 
 router
   .route('/')
-  .get(tourController.getAllTours)
-  .post(tourController.createTour);
+  // при вызове метода сначала выполняется AuthController потом TourController
+  // таким же образом скорее всего и формируются роли и т
+  .get(AuthController.protect, TourController.getAllTours)
+  .post(TourController.createTour);
 
 router
   .route('/:id')
-  .get(tourController.getTour)
-  .patch(tourController.updateTour)
-  .delete(tourController.deleteTour);
+  .get(TourController.getTour)
+  .patch(TourController.updateTour)
+  .delete(TourController.deleteTour);
 
 module.exports = router;

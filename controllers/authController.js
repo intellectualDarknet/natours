@@ -53,6 +53,28 @@ class AuthController {
       token
     });
   });
+
+  protect = catchAsync(async (req, res, next) => {
+    // 1) Getting token and check it!
+
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+    if (!token) {
+      return next(
+        new AppError('You are not logged in! Please log in to get access', 401)
+      );
+    }
+    console.log(token);
+    // 2) Verification
+    // 3) Check if userStillExists
+    // 4) Check if user changed password after the token was issued
+    next();
+  });
 }
 
 module.exports = new AuthController();
