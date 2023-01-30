@@ -35,7 +35,8 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords are not the same!'
     }
-  }
+  },
+  passwordChangedAt: Date
 });
 
 // works between getting the data and saving it to DB!
@@ -68,6 +69,20 @@ userSchema.methods.createToken = function() {
   return Jwt.sign({ value }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
+};
+
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    // rewrite in seconds
+    //
+    const changedTimeStamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTimestamp < changedTimeStamp;
+  }
+  return false;
 };
 
 module.exports = mongoose.model('User', userSchema);

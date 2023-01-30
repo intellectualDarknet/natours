@@ -35,10 +35,11 @@ class UserController {
     });
   };
 
-  deleteUser = (req, res) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined!'
+  deleteUser = async (req, res) => {
+    const user = await User.findOneAndDelete({ _id: req.params.id });
+    res.status(200).json({
+      status: 'success',
+      result: user
     });
   };
 }
