@@ -12,7 +12,8 @@ class AuthController {
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      passwordChangedAt: req.body.passwordChangedAt
+      passwordChangedAt: req.body.passwordChangedAt,
+      role: req.body.role
     });
 
     const token = '';
@@ -97,8 +98,17 @@ class AuthController {
     }
     // Grants access to the middleware
     req.user = freshUser;
+    console.log(req.user);
     next();
   });
+
+  restrictTo = (...roles) => {
+    return async (req, res, next) => {
+      if (!roles.includes(req.user.role))
+        next(new AppError('You don`t have permission to do that!', 403));
+      next();
+    };
+  };
 }
 
 module.exports = new AuthController();
