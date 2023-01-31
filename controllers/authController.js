@@ -109,6 +109,24 @@ class AuthController {
       next();
     };
   };
+
+  forgotPassword = catchAsync(async (req, res, next) => {
+    // 1) get user based on Posted email
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return next(new AppError('There is no user with email address.', 404));
+    }
+    // 2) Generate the random reset token
+    const resetToken = user.createPasswordResetToken();
+
+    // saving reset timing and another field
+    // but there is a thing that save method saves only when
+    // all required fiels are filled so we need to remove that behaviour
+    await user.save({ validateBeforeSave: false });
+    // 3) Send it to user's email
+  });
+
+  resetPassword = (req, res, next) => {};
 }
 
 module.exports = new AuthController();

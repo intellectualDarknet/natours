@@ -1,4 +1,5 @@
 const Jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -43,7 +44,9 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!'
     }
   },
-  passwordChangedAt: Date
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date
 });
 
 // works between getting the data and saving it to DB!
@@ -90,6 +93,26 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
     return JWTTimestamp < changedTimeStamp;
   }
   return false;
+};
+
+userSchema.methods.createPasswordResetToken = function() {
+  // we don't need that to be strong as password we can use some bites
+  // this reset token is a way less dangerous attack vector so we can crypto it way simplier
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  //
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  console.log({ resetToken }, this.passwordResetToken);
+
+  // we need to save it in schema to compare it in the future with the expires time
+  // 10 min = 600s = 600 000 ms
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 module.exports = mongoose.model('User', userSchema);
