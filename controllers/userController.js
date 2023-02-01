@@ -42,6 +42,10 @@ class UserController {
       result: user
     });
   };
+
+  update = async (req, res) => {
+    console.log();
+  };
 }
 
 module.exports = new UserController();
