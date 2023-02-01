@@ -7,6 +7,17 @@ const AppError = require('./../utils/appError');
 const sendEmail = require('./../utils/email');
 // there are 2 authentification for on the server side and client side
 
+const createSendToken = (user, statusCode, res) => {
+  const token = user.createToken();
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user
+    }
+  });
+};
+
 class AuthController {
   signUp = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
@@ -18,14 +29,7 @@ class AuthController {
       role: req.body.role
     });
 
-    const token = '';
-    res.status(201).json({
-      status: 'success',
-      token,
-      data: {
-        user: newUser
-      }
-    });
+    createSendToken(newUser, 201, res);
   });
 
   login = catchAsync(async (req, res, next) => {
@@ -53,11 +57,7 @@ class AuthController {
     // добавим token
     // Золотое правило что можем сделать в модели делаем в модели а не в контроллере
     // создаем токен по id 2 переменная секрет 3 обьект где указываем дату окончания
-    const token = user.createToken();
-    res.status(200).json({
-      status: 'success',
-      token
-    });
+    createSendToken(user, 200, res);
   });
 
   protect = catchAsync(async (req, res, next) => {
@@ -188,13 +188,31 @@ class AuthController {
     // user we use method save cause it starts our validators!
     // and middleware functions (encrypt!)
 
-    const token = user.createToken();
-    // 4) Log the user in , send JWT to the client
-    res.status(200).json({
-      status: 'success',
-      token
-    });
+    createSendToken(user, 200, res);
   };
+
+  updatePassword = catchAsync(async (req, res, next) => {
+    console.log('update');
+    // 1) get user from collection
+    const user = await User.findById(req.user.id).select('+password');
+
+    if (
+      !user ||
+      !(await user.correctPassword(this.body.passwordCurrent, user.password))
+    ) {
+      return next(new AppError('Your current password is wrong'), 401);
+    }
+    // 2) Check if posted password is correct
+    console.log('update');
+    // 3) If so, update password
+    user.password = this.body.password;
+    user.passwordConfirm = this.body.passwordConfirm;
+    // to work our middlewares and hash password insted of using findOneAndUpdate these methods wont do that
+    await user.save();
+    // 4) Log user in, send JWT
+    console.log('token');
+    createSendToken(user, 200, res);
+  });
 }
 
 module.exports = new AuthController();
