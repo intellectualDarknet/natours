@@ -9,6 +9,10 @@ const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
+
+//set security HTTP headers 
+app.use(helmet())
+
 // 1) MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -22,8 +26,6 @@ const limiter = rateLimit({
   message: 'Too many requests from this API, please try again in an hour',
 });
 
-//set security HTTP headers 
-app.use(helmet())
 
 //use before every request GG
 // in this case use for api
