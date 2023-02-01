@@ -45,6 +45,8 @@ app.use(mongoSanitize())
 // Data sanitization agains XSS
 // will clean input from malicious html code with jscode attached to it
 // if it will occur in the html page the script will work
+// mongoose validation is good protection against xss
+
 app.use(xss())
 
 app.use(express.static(`${__dirname}/public`));
