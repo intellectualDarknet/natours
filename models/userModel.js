@@ -56,9 +56,15 @@ userSchema.pre('save', async function(next) {
 
   // Encrypt password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
-
   // Delete password field
   this.passwordConfirm = undefined;
+  next();
+});
+userSchema.pre('save', function(next) {
+  // sometimes passwordChangedAT ensures that token created later than password changed
+
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
@@ -94,6 +100,8 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   }
   return false;
 };
+
+//
 
 userSchema.methods.createPasswordResetToken = function() {
   // we don't need that to be strong as password we can use some bites

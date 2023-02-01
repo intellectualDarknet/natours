@@ -1,4 +1,5 @@
 const { promisify } = require('util');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -156,7 +157,44 @@ class AuthController {
     });
   });
 
-  resetPassword = (req, res, next) => {};
+  resetPassword = async (req, res, next) => {
+    console.log('resetPasswordMethod');
+    // 1) get user based on the token
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    // this token is the only thing that we know about the user
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gte: Date.now() }
+    });
+    console.log(user);
+    // 2) If token has not expired ,and ther is user, set new password
+    // checking throung gte
+
+    if (!user) {
+      return next(new AppError('Token is invalid or has expired', 400));
+    }
+    // 3 update changed passwordAt property for the user
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+    console.log('saved');
+    // for everything related to password and
+    // user we use method save cause it starts our validators!
+    // and middleware functions (encrypt!)
+
+    const token = user.createToken();
+    // 4) Log the user in , send JWT to the client
+    res.status(200).json({
+      status: 'success',
+      token
+    });
+  };
 }
 
 module.exports = new AuthController();
