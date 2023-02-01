@@ -7,7 +7,8 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const mongoSanitize = require('express-mongo-sanitize')
-const xss = require('xss-clean')
+const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const app = express();
 
@@ -48,6 +49,16 @@ app.use(mongoSanitize())
 // mongoose validation is good protection against xss
 
 app.use(xss())
+
+
+// Prevent parameter pollution
+// removes repeating parametres
+// but we can whitelist some
+app.use(hpp({
+  whitelist: [
+    'duration'
+  ]
+}))
 
 app.use(express.static(`${__dirname}/public`));
 
