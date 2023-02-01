@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const sendEmail = require('./../utils/email');
 // there are 2 authentification for on the server side and client side
 
 class AuthController {
@@ -124,6 +125,35 @@ class AuthController {
     // all required fiels are filled so we need to remove that behaviour
     await user.save({ validateBeforeSave: false });
     // 3) Send it to user's email
+
+    // from the link to reset the password in email
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/resetPassword/${resetToken}`;
+
+    const message = `Forgot your password? Submit your patch request with your new password and passwordConfirm to ${resetURL}.\n If you didn't forget your password please ignore this email!`;
+    try {
+      sendEmail({
+        from: 'sender@example.com',
+        to: 'recipient@example.com',
+        subject: 'Message',
+        email: 'ladyblaumeux24@gmail.com',
+        message
+      });
+    } catch (err) {
+      user.createPasswordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return next(
+        new AppError('There was an error sending an email try again later', 500)
+      );
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to mail'
+    });
   });
 
   resetPassword = (req, res, next) => {};
