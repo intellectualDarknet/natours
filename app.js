@@ -55,7 +55,7 @@ app.use(xss())
 // removes repeating parametres
 // but we can whitelist some
 app.use(hpp({
-  whitelist: [
+  whitelist: [ 
     'duration'
   ]
 }))
