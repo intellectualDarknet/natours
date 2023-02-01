@@ -52,7 +52,7 @@ class UserController {
     });
   };
 
-  updateMe = async (req, res, next) => {
+  updateMe = catchAsync(async (req, res, next) => {
     // 1) create error if user POSTs password data
 
     if (req.body.password || req.body.passwordConfirm) {
@@ -83,7 +83,16 @@ class UserController {
         updatedUser
       }
     });
-  };
+  });
+
+  deleteMe = catchAsync(async (req, res, next) => {
+    await User.findByIdAndUpdate(req.user.id, { active: false });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  });
 }
 
 module.exports = new UserController();

@@ -46,7 +46,19 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetExpires: Date
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
+  }
+});
+
+// срабатывает на любые методы начинающиеся с find!
+userSchema.pre(/^find/, function(next) {
+  // this points to current query
+  this.find({ active: { $ne: false } });
+  next();
 });
 
 // works between getting the data and saving it to DB!

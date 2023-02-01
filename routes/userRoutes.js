@@ -15,6 +15,9 @@ router.patch(
   AuthController.updatePassword
 );
 router.patch('/updateMe', AuthController.protect, UserController.updateMe);
+// user will became unaccessible but it is still
+// okay to use delete method
+router.delete('/deleteMe', AuthController.protect, UserController.deleteMe);
 
 router
   .route('/')
