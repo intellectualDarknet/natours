@@ -5,6 +5,8 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const sendEmail = require('./../utils/email');
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
 // there are 2 authentification for on the server side and client side
 
 const createSendToken = (user, statusCode, res) => {

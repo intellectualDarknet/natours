@@ -6,6 +6,8 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
 
 const app = express();
 
@@ -35,6 +37,15 @@ app.use('/api/', limiter);
 // limits our requets we can sent only 10kb the same thing
 // according to the our app request
 app.use(express.json({ limit: '10kb'}));
+
+// Data sanitization against noSQL query injection
+// filters all the $ and .
+app.use(mongoSanitize())
+
+// Data sanitization agains XSS
+// will clean input from malicious html code with jscode attached to it
+// if it will occur in the html page the script will work
+app.use(xss())
 
 app.use(express.static(`${__dirname}/public`));
 
