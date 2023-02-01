@@ -45,6 +45,7 @@ class UserController {
 
   update = async (req, res) => {
     console.log();
+    console.log();
   };
 }
 
