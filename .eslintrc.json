@@ -3,6 +3,10 @@
   "plugins": ["prettier"],
   "parser": "@babel/eslint-parser",
   "rules": {
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      { "ignores": ["modules"] },
+    ],
     "prettier/prettier": "error",
     "spaced-comment": "off",
     "no-console": "warn",
