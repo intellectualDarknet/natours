@@ -9,6 +9,25 @@ const sendEmail = require('./../utils/email');
 
 const createSendToken = (user, statusCode, res) => {
   const token = user.createToken();
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.jWT_COOKIE_EXPIRES_IN * 60 * 60 * 24 * 1000
+    ),
+    // cookie can be sent encrypted connection
+    //secure: true
+    // cant be accessed or midified by browser
+    httpOnly: true
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  // every time when we send a request we send cookie and new one replace old one
+
+  res.cookie('jwt', token, cookieOptions);
+
+  // to prevent showing password when creating document!
+  user.password = undefined;
+
   res.status(statusCode).json({
     status: 'success',
     token,
