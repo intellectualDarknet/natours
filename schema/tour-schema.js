@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+
+// every field that is not defined in schema will be ignored
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
