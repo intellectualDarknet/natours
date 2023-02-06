@@ -18,4 +18,4 @@ const tourSchema = new mongoose.Schema({
 // use only Tour with capital T
 const Tour = mongoose.model('Tour', tourSchema);
 
-module.export = Tour;
+module.exports = Tour;
