@@ -22,8 +22,24 @@ exports.getAllTours = async (req, res) => {
     let queryStr = JSON.stringify(queryObj)
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
 
+    // returns query
+    let query = Tour.find(JSON.parse(queryStr))
+
+    // 3) Sorting
+    // postman example
+    // sorting by descending order
+    // {{UdemyUrl}}tours?sort=-price,-ratingsAverage
+    if (req.query.sort) {
+      console.log('sorting', req.query.sort)
+      const sortBy = req.query.sort.split(',').join(' ');
+      console.log('sortBy', sortBy)
+      query = query.sort(sortBy)
+    } else {
+      // sorting by adding date
+      query = query.sort('-createdAt')
+    }
     console.log(JSON.parse(queryStr))
-    const tours = await Tour.find(JSON.parse(queryStr))
+    const tours = await query
 
     res.status(200).json({
       status: 'success',
