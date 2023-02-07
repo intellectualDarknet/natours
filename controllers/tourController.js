@@ -56,7 +56,8 @@ exports.createTour = async (req, res) => {
   } catch(err) {
     res.status(400).json({
       status: 'fail',
-      message: "Invalid data set"
+      message: "Invalid data set",
+      error: err
     })
   }
 
@@ -83,9 +84,17 @@ exports.updateTour = async (req, res) => {
 
 };
 
-exports.deleteTour = (req, res) => {
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
+exports.deleteTour = async (req, res) => {
+  try {
+    const deletedTour = await Tour.findByIdAndDelete(req.params.id)
+    res.status(204).json({
+      status: 'success',
+      data: deletedTour
+    });
+  } catch(error) {
+    res.status(400).json({
+      status: 'success',
+      message: error
+    });
+  }
 };
