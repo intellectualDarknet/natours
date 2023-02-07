@@ -38,7 +38,18 @@ exports.getAllTours = async (req, res) => {
       // sorting by adding date
       query = query.sort('-createdAt')
     }
-    console.log(JSON.parse(queryStr))
+
+    // 4) limiting fields (projecting)
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields)
+    } else {
+      // __v mongo uses it internally
+      // -fieldname excluding 
+      // postman {{UdemyUrl}}tours?fields=-duration,-__v,-difficulty
+      query = query.select('-__v')
+    }
+
     const tours = await query
 
     res.status(200).json({
