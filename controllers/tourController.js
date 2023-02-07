@@ -9,14 +9,19 @@ exports.getAllTours = async (req, res) => {
     console.log('we ll see here query params { duration:5, difficulty: easy }', req.query)
     excludedFields.forEach(el => delete queryObj[el])
 
-    console.log('queryObj', queryObj)
 
     // two ways of querying in mongoDB
     // const tours = await Tour.find({'duration': 5, 'difficulty': 'easy'})
     // chaining
     // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy')
 
-    const tours = await Tour.find(queryObj)
+
+    //2) Advanced filtering
+    let queryStr = JSON.stringify(queryObj)
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+
+    console.log(JSON.parse(queryStr))
+    const tours = await Tour.find(JSON.parse(queryStr))
 
     res.status(200).json({
       status: 'success',
