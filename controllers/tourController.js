@@ -6,89 +6,77 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.limit = "5"
   req.query.sort = '-ratingsAverage,price'
   req.query.fields = 'name,price,ratingsAverage,summary,difficuilty'
-
-  // next is needed to move forward otherwise we will stuck.
   next()
+}
+
+class APIFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+    
+  filter() {
+    const queryObj = { ...this.queryString }
+    const excludedFields = ['page', 'sort', 'limit', 'fields']
+    excludedFields.forEach(el => delete queryObj[el])
+
+    let queryStr = JSON.stringify(queryObj)
+    queryStr  = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+ 
+    this.query = this.query.find(JSON.parse(queryStr))
+    return this
+  }
+
+  sort() {
+    if (this.queryString.sort) {
+      const sortBy = this.queryString.sort.split(',').join(' ');
+      this.query = this.query.sort(sortBy)
+    } else {
+      this.query = this.query.sort('-createdAt')
+    }
+    return this
+  }
+
+  limitFields() {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ');
+      this.query = this.query.select(fields)
+    } else {
+      this.query = this.query.select('-__v')
+    }
+    return this
+  }
+
+  async paginate() {
+    const page = this.queryString.page * 1 || 1
+    const limit = this.queryString.limit * 1 || 100
+    const skip = (page - 1) * limit
+
+    this.query = this.query.skip(skip).limit(limit)
+    return this.query
+  }
 }
 
 exports.getAllTours = async (req, res) => {
   try {
-
-    const queryObj = { ...req.query }
-    const excludedFields = ['page', 'sort', 'limit', 'fields']
-    console.log('we ll see here query params { duration:5, difficulty: easy }', req.query)
-    excludedFields.forEach(el => delete queryObj[el])
-
-
-    // two ways of querying in mongoDB
-    // const tours = await Tour.find({'duration': 5, 'difficulty': 'easy'})
-    // chaining
-    // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy')
-
-
-    //2) Advanced filtering
-    // the example of requiest in postman
-    // {{UdemyUrl}}tours?price[gte]=500&difficulty=easy&duration[gte]=5
-    let queryStr = JSON.stringify(queryObj)
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
-
-    // returns query
-    let query = Tour.find(JSON.parse(queryStr))
-
-    // 3) Sorting
-    // postman example
-    // sorting by descending order
-    // {{UdemyUrl}}tours?sort=-price,-ratingsAverage
-    if (req.query.sort) {
-      console.log('sorting', req.query.sort)
-      const sortBy = req.query.sort.split(',').join(' ');
-      console.log('sortBy', sortBy)
-      query = query.sort(sortBy)
-    } else {
-      // sorting by adding date
-      query = query.sort('-createdAt')
-    }
-
-    // 4) limiting fields (projecting)
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      query = query.select(fields)
-    } else {
-      // __v mongo uses it internally
-      // -fieldname excluding 
-      // postman {{UdemyUrl}}tours?fields=-duration,-__v,-difficulty
-      query = query.select('-__v')
-    }
-
-    // 5) Pagination
-    const page = req.query.page * 1 || 1
-    const limit = req.query.limit * 1 || 100
-    const skip = (page - 1) * limit
-    query = query.skip(skip).limit(limit)
-
-
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments();
-      if (skip >= numTours) throw new Error('this page does not exist')
-    }
-
-    const tours = await query
-
+    const tours = await new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
     res.status(200).json({
       status: 'success',
-      data: {tours}
+      data: { tours }
     });
-  } catch(e) {
+  } catch(error) {
     res.status(404).json({
       status: 'fail',
-      message: e
+      message: error
     })
   }
-
 };
 
 exports.getTour = async (req, res) => {
-
   try {
     // findById the same thing as find({ _id: value})
     const tour = await Tour.findById(req.params.id)
