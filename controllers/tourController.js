@@ -97,8 +97,67 @@ exports.deleteTour = async (req, res) => {
     });
   } catch(error) {
     res.status(400).json({
-      status: 'success',
+      status: 'fail',
       message: error
     });
   }
 };
+
+exports.getTourStats = async (req, res) => {
+  try {
+    const result = await Tour.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          // what we want to group by
+          // we want to have everyting in one group
+          // we can calculate statistics for all tours together
+          // and not separate by groups
+  
+          // if we would group by difficulty we ll have average
+          // value for easy , hard etc values!
+            // _id: null,
+            _id: null,// сведет все в кучу
+            // выведет сложность в upper 
+             _id: { $toUpper: '$difficulty'}, 
+            // кол-во посчитаных туров
+            numTours: { $sum: 1 },
+            numRatings: { $sum: '$ratingsQuantity' },
+            // среднее количество
+            avgRating: { $avg: '$ratingsAverage'},
+            avgPrice: { $avg: '$price' },
+            minPrice: { $min: '$price' },
+            maxPrice: { $max: '$price' }
+        }
+        // значения в _id собирает результаты с уникальными
+        // комбинациями имеющихся значений в _id
+      },
+      {
+        // 1 asc -1 desc
+        //stages can be repeated
+        $sort: { avgPrice: 1 }
+      },
+      // not equal to easy
+      {
+        $match: { _id: { $ne: 'EASY' } }
+      }
+
+    ]);
+    console.log('stat',' result', result)
+    res.status(200).json({
+      status: 'success',
+      data: 
+        result
+    });
+  } catch(error) {
+    console.log(error)
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
+};
+
+
