@@ -3,14 +3,25 @@ const Tour = require('../schema/tour');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find()
+
+    const queryObj = { ...req.query }
+    const excludedFields = ['page', 'sort', 'limit', 'fields']
+    console.log('we ll see here query params { duration:5, difficulty: easy }', req.query)
+    excludedFields.forEach(el => delete queryObj[el])
+
+    console.log('queryObj', queryObj)
+
+    // two ways of querying in mongoDB
+    // const tours = await Tour.find({'duration': 5, 'difficulty': 'easy'})
+    // chaining
+    // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy')
+
+    const tours = await Tour.find(queryObj)
 
     res.status(200).json({
       status: 'success',
-      data: {
-        tours
-      }
-    }); 
+      data: {tours}
+    });
   } catch(e) {
     res.status(404).json({
       status: 'fail',
@@ -18,10 +29,7 @@ exports.getAllTours = async (req, res) => {
     })
   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {}
-  });
+
 };
 
 exports.getTour = async (req, res) => {
