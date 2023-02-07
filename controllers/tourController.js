@@ -1,5 +1,5 @@
 const fs = require('fs');
-const Tour = require('../schema/tour-schema');
+const Tour = require('../schema/tour');
 
 exports.getAllTours = async (req, res) => {
   try {

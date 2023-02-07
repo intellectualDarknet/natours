@@ -1,11 +1,10 @@
 const fs = require('fs')
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const Tour = require('../schema/tour-schema');
+const Tour = require('../schema/tour');
 dotenv.config({ path: './config.env' });
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'))
-
 mongoose.connect(
   process.env.DATABASE,
   {
@@ -46,4 +45,6 @@ const deleteData = async () => {
 
 // we can use node to import this file withoud require or export
 // node path --import
+// $ node scripts/insert-tours.js --import
+// $ node scripts/insert-tours.js --delete
 

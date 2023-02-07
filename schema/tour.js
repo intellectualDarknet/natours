@@ -6,23 +6,26 @@ const tourSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'A tour must have a name'],
-    unique: true
+    unique: true,
   },
+  slug: String,
   duration: {
     type: Number,
     required: [true, 'A tour must have a duration']
   },
   maxGroupSize: {
     type: Number,
-    required: [false, 'A tour must have a group size']
+    required: [true, 'A tour must have a group size']
   },
   difficulty: {
     type: String,
-    required: [true, 'A tour must have a difficulty']
+    required: [true, 'A tour must have a difficulty'],
   },
   ratingsAverage: {
     type: Number,
-    defauld: 4.5
+    default: 4.5,
+    min: [1, 'Rating must be above 1.0'],
+    max: [5, 'Rating must be below 5.0']
   },
   ratingsQuantity: {
     type: Number,
@@ -32,11 +35,13 @@ const tourSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'A tour must have a price']
   },
-  priceDiscount: Number,
+  priceDiscount: {
+    type: Number,
+  },
   summary: {
     type: String,
     trim: true,
-    required: [true, 'A tour must have a price']
+    required: [true, 'A tour must have a description']
   },
   description: {
     type: String,
@@ -53,6 +58,7 @@ const tourSchema = new mongoose.Schema({
   },
   startDates: [Date]
 });
+
 // use only Tour with capital T
 const Tour = mongoose.model('Tour', tourSchema);
 
