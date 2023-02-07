@@ -17,6 +17,8 @@ exports.getAllTours = async (req, res) => {
 
 
     //2) Advanced filtering
+    // the example of requiest in postman
+    // {{UdemyUrl}}tours?price[gte]=500&difficulty=easy&duration[gte]=5
     let queryStr = JSON.stringify(queryObj)
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
 
