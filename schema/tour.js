@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { default: slugify } = require('slugify');
-
+const { default: validator } = require('validator')
 // fat models thin controlles ideology!
 
 // every field that is not defined in schema will be ignored
@@ -14,7 +14,8 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'A tour must have a name'],
     unique: true,
     maxlength: [40, 'A tour name must have less or equal 40 characters'],
-    minlength: [10, 'A tour name must have more or equal then 10 characters']
+    minlength: [10, 'A tour name must have more or equal then 10 characters'],
+    validate: [validator.isAlpha, 'Tour name must only contains characters']
   },
   slug: String,
   duration: {
@@ -50,6 +51,15 @@ const tourSchema = new mongoose.Schema({
   },
   priceDiscount: {
     type: Number,
+    validate: {
+      // this only points to current doc on NEW document creation
+      validator: function(val) {
+        return val < this.price; // 
+      },
+      // we can get access to input value (val) in validator in {VALUE}
+      message: 'Discount price {VALUE} should be below regular price'
+    }
+   
   },
   summary: {
     type: String,
