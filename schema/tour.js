@@ -65,7 +65,11 @@ const tourSchema = new mongoose.Schema({
     // Schema.find ... methods
     select: false
   },
-  startDates: [Date]
+  startDates: [Date],
+  secretTour: {
+    type: Boolean,
+    default: false
+  }
 }, {
   // Each time the data is outputted in json 
   // virtuals will be in there!
@@ -94,18 +98,48 @@ tourSchema.pre('save', function(next) {
   next() 
 })
 
-// middleware (hooks)
-tourSchema.pre('save', function(next) {
-  console.log('Will save document...')
+// query middleware
+// will point at current query in find... Method
+
+//this middleware works for find but not findOne
+// this is why we ll rewrite
+
+// tourSchema.pre('find', function(next) {
+  // filtered objects withoud secretTour: true
+  // use the way $ne: true, because if we set secretTour: false
+  // this field could not be in the database
+//   this.find({ secretTour: { $ne: true } })
+//   next()
+// })
+
+
+// all the strings that starts with find
+ 
+tourSchema.pre(/^find/, function(next) {
+  this.find({ secretTour: { $ne: true } })
+  next()
+  this.start = Date.now()
+})
+
+tourSchema.post(/^find/, function (docs, next) {
+  console.log('query took', Date.now() - this.start, 'ms')
   next()
 })
 
+
+// middleware (hooks)
+
+// tourSchema.pre('save', function(next) {
+//   console.log('Will save document...')
+//   next()
+// })
+
 // post middleware function executies after all pre middlewares
-tourSchema.post('save', function(doc, next) {
-  console.log(doc)
-  // wil log our document
-  next()
-})
+// tourSchema.post('save', function(doc, next) {
+//   console.log(doc)
+  // will log our document
+//   next()
+// })
 
 const Tour = mongoose.model('Tour', tourSchema);
 
