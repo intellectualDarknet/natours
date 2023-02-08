@@ -138,11 +138,11 @@ exports.getTourStats = async (req, res) => {
         // 1 asc -1 desc
         //stages can be repeated
         $sort: { avgPrice: 1 }
-      },
-      // not equal to easy
-      {
-        $match: { _id: { $ne: 'EASY' } }
       }
+      // not equal to easy
+      // {
+      //   $match: { _id: { $ne: 'EASY' } }
+      // }
 
     ]);
     console.log('stat',' result', result)
