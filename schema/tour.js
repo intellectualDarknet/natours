@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
+const { default: slugify } = require('slugify');
 
 // fat models thin controlles ideology!
 
 // every field that is not defined in schema will be ignored
+
+
+// 4 types of middleware in mongoose 
+// document, query, aggregate , model
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -77,6 +82,32 @@ tourSchema.virtual('durationWeeks').get(function() {
 })
 
 // use only Tour with capital T
+
+// runs before document saved to db
+// .save() and .create() methods but not insertMany()
+tourSchema.pre('save', function(next) {
+  // sligify simpletransformer of text
+  // converts to lowercase in this case
+
+  this.slug = slugify(this.name, { lower: true })
+  // will call the next middleware in a row or we ll stuck
+  next() 
+})
+
+// middleware (hooks)
+tourSchema.pre('save', function(next) {
+  console.log('Will save document...')
+  next()
+})
+
+// post middleware function executies after all pre middlewares
+tourSchema.post('save', function(doc, next) {
+  console.log(doc)
+  // wil log our document
+  next()
+})
+
 const Tour = mongoose.model('Tour', tourSchema);
+
 
 module.exports = Tour;
