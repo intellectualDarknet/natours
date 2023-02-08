@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// fat models thin controlles ideology!
 
 // every field that is not defined in schema will be ignored
 const tourSchema = new mongoose.Schema({
@@ -60,7 +61,20 @@ const tourSchema = new mongoose.Schema({
     select: false
   },
   startDates: [Date]
+}, {
+  // Each time the data is outputted in json 
+  // virtuals will be in there!
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
+
+
+// technically they are not the part of the database so 
+// we cant query them! use in find({})
+tourSchema.virtual('durationWeeks').get(function() {
+  // duration in weeks
+  return this.duration / 7
+})
 
 // use only Tour with capital T
 const Tour = mongoose.model('Tour', tourSchema);
