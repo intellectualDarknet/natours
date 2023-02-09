@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel')
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -105,7 +104,14 @@ const tourSchema = new mongoose.Schema(
         }
       ]
     },
-    guides: Array
+    guides: [
+      // expect the type to be the mongoDB id 
+      {
+        type: mongoose.Schema.ObjectId,
+        // establish reference 
+        ref: 'User'
+      }
+    ]
   },
   {
     toJSON: { virtuals: true },
@@ -154,14 +160,6 @@ tourSchema.pre('aggregate', function(next) {
   console.log(this.pipeline());
   next();
 });
-
-tourSchema.pre('save', async function(next) {
-  // get all the users in Tours
-  // add embeding link between tours and users
-  const guidesPromises = this.guides.map((id) => User.findById(id))
-  this.guides = await Promise.all(guidesPromises)
-  next()
-})
 
 const Tour = mongoose.model('Tour', tourSchema);
 
