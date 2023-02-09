@@ -2,15 +2,16 @@ const express = require('express');
 const AuthController = require('../controllers/authController');
 const ReviewController = require('../controllers/reviewController')
 
-const router = express.Router();
+// POST /tour/234sssdd/reviews
+// POST /reviews
+
+// by default router have access to only their route so we need to enable
+// so this how our route get params in tourRoutes .js
+const router = express.Router({ mergeParams: true });
 
 router
-  .route('/:id')
-  .get(AuthController.protect, ReviewController.getSingleReview)
-  
-router
   .route('/')
-  .get(AuthController.protect, ReviewController.getAllReview)
-  .post(AuthController.protect, ReviewController.createReview)
+  .get(ReviewController.getAllReview)
+  .post(AuthController.protect, AuthController.restrictTo('user'), ReviewController.createReview)
 
 module.exports = router;
