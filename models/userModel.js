@@ -58,6 +58,8 @@ const userSchema = new mongoose.Schema({
 // срабатывает на любые методы начинающиеся с find!
 userSchema.pre(/^find/, function(next) {
   // this points to current query
+
+
   this.find({ active: { $ne: false } });
   next();
 });
