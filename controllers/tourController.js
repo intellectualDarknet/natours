@@ -31,7 +31,9 @@ class TourController {
 
   getTour = catchAsync(async (req, res, next) => {
     // populate works even for an array
-    const tour = await Tour.findById(req.params.id)
+    // we only want to know this thing in single tour
+    // there is no need to do it in all tours it affects perfomance
+    const tour = await Tour.findById(req.params.id).populate('reviews')
     // Tour.findOne({ _id: req.params.id })
 
     if (!tour) {

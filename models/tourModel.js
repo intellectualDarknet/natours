@@ -173,6 +173,18 @@ tourSchema.post(/^find/, function(docs, next) {
   next();
 });
 
+// how can we count we amount of reviews on the tours???
+// throught virtual populate!
+// keep the information about amount of reviews in tourModel without
+// keeping it in database
+
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+   // link in the field Review to tour
+  foreignField: 'tour',
+  localField: '_id',
+})
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;

@@ -35,17 +35,18 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.pre(/^find/, function(next) {
   
-  this.populate({
-    path: 'user',
-    select: 'name'
-  });
+    // there is no need to do it in all tours it affects perfomance
+    // and we ll have chain of 3 populates because if we try 
+    // so the solution now is to remove population to break the chain
+    // we do it according to the application!
 
-  this.populate({
-    path: 'tour',
-    select: 'name, photo'
-  });
+  // this.populate({
+  //   path: 'tour',
+  //   select: 'name, photo'
+  // });
   next()
 })
+
 
 const Review = mongoose.model('Review', reviewSchema);
 
