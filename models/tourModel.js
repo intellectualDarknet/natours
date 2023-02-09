@@ -159,8 +159,6 @@ tourSchema.pre('aggregate', function(next) {
 });
 
 tourSchema.pre(/^find/, async function(next) {
-
-  // we can write populate here if we 
   this.populate({
     //field
     path: 'guides',
