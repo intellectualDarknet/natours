@@ -33,6 +33,8 @@ class TourController {
     // populate works even for an array
     // we only want to know this thing in single tour
     // there is no need to do it in all tours it affects perfomance
+    // and we ll have chain of 3 populates because if we try 
+    // to get tour
     const tour = await Tour.findById(req.params.id).populate('reviews')
     // Tour.findOne({ _id: req.params.id })
 

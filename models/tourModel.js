@@ -178,6 +178,8 @@ tourSchema.post(/^find/, function(docs, next) {
 // keep the information about amount of reviews in tourModel without
 // keeping it in database
 
+
+
 tourSchema.virtual('reviews', {
   ref: 'Review',
    // link in the field Review to tour

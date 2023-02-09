@@ -4,8 +4,6 @@ const ReviewController = require('../controllers/reviewController')
 
 const router = express.Router();
 
-// router.param('id', TourController.checkID);
-
 router
   .route('/:id')
   .get(AuthController.protect, ReviewController.getSingleReview)

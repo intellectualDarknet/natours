@@ -1,6 +1,7 @@
 const express = require('express');
 const AuthController = require('../controllers/authController');
 const TourController = require('./../controllers/tourController');
+const reviewController = require('./../controllers/reviewController');
 
 const router = express.Router();
 
@@ -12,11 +13,12 @@ router
 
 router.route('/tour-stats').get(TourController.getTourStats);
 router.route('/monthly-plan/:year').get(TourController.getMonthlyPlan);
+  // при вызове метода сначала выполняется AuthController потом TourController
 
+  // таким же образом скорее всего и формируются роли и т
 router
   .route('/')
-  // при вызове метода сначала выполняется AuthController потом TourController
-  // таким же образом скорее всего и формируются роли и т
+
   .get(AuthController.protect, TourController.getAllTours)
   .post(TourController.createTour);
 
@@ -29,5 +31,16 @@ router
     AuthController.restrictTo('admin', 'lead-guide'),
     TourController.deleteTour
   );
+  
+  // when there is a clear parent-child relationship between resourses
+  // it is clearly the case here
+  //      tour/tourID/review/reviewID 
+  // post tour/234fad4/review
+  // get  tour/234fad4/review
+  // get  tour/234fad4/review/rsefsefesfes
+  // rewriting router according to the schema connection!
+  
+router.route('/:tourId/reviews')
+  .post(AuthController.protect, AuthController.restrictTo('user'), reviewController.createReview)
 
 module.exports = router;
