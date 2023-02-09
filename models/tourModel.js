@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel')
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -59,6 +60,7 @@ const tourSchema = new mongoose.Schema(
       trim: true,
       required: [true, 'A tour must have a description']
     },
+    
     description: {
       type: String,
       trim: true
@@ -77,7 +79,33 @@ const tourSchema = new mongoose.Schema(
     secretTour: {
       type: Boolean,
       default: false
-    }
+    },
+    startLocation: {
+      // GeoJSON in order to specify location
+      type: {
+        type: String,
+        // can be poligons lines etc
+        default: 'Point',
+        enum: ['Point']
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+      locations: [
+        {
+          type: {
+            type: String,
+            default: 'Point',
+            enum: ['Point']
+          },
+          coordinates: [Number],
+          address: String,
+          description: String,
+          day: Number
+        }
+      ]
+    },
+    guides: Array
   },
   {
     toJSON: { virtuals: true },
@@ -126,6 +154,14 @@ tourSchema.pre('aggregate', function(next) {
   console.log(this.pipeline());
   next();
 });
+
+tourSchema.pre('save', async function(next) {
+  // get all the users in Tours
+  // add embeding link between tours and users
+  const guidesPromises = this.guides.map((id) => User.findById(id))
+  this.guides = await Promise.all(guidesPromises)
+  next()
+})
 
 const Tour = mongoose.model('Tour', tourSchema);
 
