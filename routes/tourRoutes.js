@@ -7,6 +7,7 @@ const router = express.Router();
 
 // use to hit the exact route!
 router.use('/:tourId/reviews', reviewRouter)
+// and in there we use simple get method !
 
 router
   .route('/top-5-cheap')
