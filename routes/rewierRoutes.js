@@ -1,5 +1,6 @@
 const express = require('express');
 const AuthController = require('../controllers/authController');
+const reviewController = require('../controllers/reviewController');
 const ReviewController = require('../controllers/reviewController')
 
 // POST /tour/234sssdd/reviews
@@ -16,6 +17,7 @@ router
   
 router
   .route('/:id')
+  .get(AuthController.protect, AuthController.restrictTo('user'), reviewController.getReview)
   .patch(AuthController.protect, AuthController.restrictTo('user'), ReviewController.updateReview)
   .delete(AuthController.protect, AuthController.restrictTo('admin'), ReviewController.deleteReview)
 
