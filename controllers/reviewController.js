@@ -5,17 +5,13 @@ const factory = require('./handlerFactory')
 
 class ReviewController {
 
-  createReview = catchAsync(async (req, res, next) => {
-    // Allow nested routes
-    if (!req.body.tour) req.body.tour = req.params.tourId
+  createReview = factory.createOne(Review)
+
+  setTourUserIds = (req, res, next) => {
+    if (!req.body.tour) req.body.tour = req.params.tourId;
     if (!req.body.user) req.body.user = req.user.id
-    const review = await Review.create(req.body)
-    console.log(review)
-    res.status(201).json({
-      status: 'success',
-      body: review
-    })
-  })
+    next()
+  }
 
   getSingleReview = catchAsync(async (req, res, next) => {
     console.log('idddd', req.params.id)
@@ -40,6 +36,7 @@ class ReviewController {
     })
   })
 
+  updateReview = factory.updateOne(Review)
   deleteReview = factory.deleteOne(Review)
 }
 

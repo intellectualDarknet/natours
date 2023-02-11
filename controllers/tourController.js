@@ -52,35 +52,8 @@ class TourController {
     });
   });
 
-  createTour = catchAsync(async (req, res, next) => {
-    const newTour = await Tour.create(req.body);
-
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: newTour
-      }
-    });
-  });
-
-  updateTour = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
-
-    if (!tour) {
-      return next(new AppError('No tour found with that ID', 404));
-    }
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour
-      }
-    });
-  });
-
+  createTour = factory.createOne(Tour)
+  updateTour = factory.updateOne(Tour)
   deleteTour = factory.deleteOne(Tour)
 
   getTourStats = catchAsync(async (req, res, next) => {
