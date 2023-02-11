@@ -4,7 +4,6 @@ const factory = require('./handlerFactory')
 
 class UserController {
   getAllUsers = factory.getAll(User)
-
   getUser = factory.getOne(User);
   updateUser = factory.updateOne(User)
   // error
@@ -12,7 +11,6 @@ class UserController {
 
   // mb the same in methods
   deleteUser = factory.deleteOne(User)
-
   deleteMe = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user.id, { active: false });
 
