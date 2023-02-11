@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
+const factory = require('./handlerFactory')
 
 const filterObj = (obj, ...allowedFields) => {
   const returningObj = {};
@@ -44,13 +45,7 @@ class UserController {
     });
   };
 
-  deleteUser = async (req, res) => {
-    const user = await User.findOneAndDelete({ _id: req.params.id });
-    res.status(200).json({
-      status: 'success',
-      result: user
-    });
-  };
+    deleteUser = factory.deleteOne(User)
 
   updateMe = catchAsync(async (req, res, next) => {
     // 1) create error if user POSTs password data

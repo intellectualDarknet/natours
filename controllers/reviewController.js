@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const catchAsync = require('../utils/catchAsync')
 const Review = require('../models/reviewModel')
+const factory = require('./handlerFactory')
 
 class ReviewController {
 
@@ -38,6 +39,8 @@ class ReviewController {
       body: reviews
     })
   })
+
+  deleteReview = factory.deleteOne(Review)
 }
 
 module.exports = new ReviewController();
