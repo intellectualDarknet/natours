@@ -18,7 +18,6 @@ router
   
 router.use(AuthController.protect)
 
-
 router
   .route('/:id')
   .get(AuthController.restrictTo('user'), reviewController.getReview)
