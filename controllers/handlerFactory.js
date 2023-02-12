@@ -68,6 +68,12 @@ exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate();
+    // to find exact docums with the definite params we need to loop throught all the docs
+    // in big bases it will affect the time so we can create indexes
+    // by default id has special table of only indexes so we this is why looking only by id works faster than by any 
+    // another unique field
+
+    // add explain to look general information about the query (elems looped ets)
   const doc = await features.query;
 
   // SEND RESPONSE

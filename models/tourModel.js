@@ -118,6 +118,21 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
+// 1 ascending order -1 descending order depends on that people usually search for lowest price, greater ratingsAverage
+// we create special table like index to decrease amount of
+// of documents that are looped through from 9 (all document) to 3 (binary search??)
+// so we can now find elems faster
+// then we set smth unique it does the same only behind the scenes
+
+// ussual strategy is to set indexes for the fields that are the most queried
+// but these new indexes take apr 5 times more memo than entire docs
+// each index updates each time the document is updated so if we usually update document, and rarely use searches 
+// it is pointless to do that
+
+// if we delete such field we need to remove slug index to
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
