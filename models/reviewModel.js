@@ -114,7 +114,8 @@ reviewSchema.post(/^findOneAnd/, async function(next) {
   await this.r.constructor.calcAverageRatings(this.r.tour)
 })
 
-
+// we need to implement thing that 1 user can create only 1 review on each tour so
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true })
 
 const Review = mongoose.model('Review', reviewSchema);
 
