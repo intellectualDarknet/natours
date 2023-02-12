@@ -17,6 +17,12 @@ router.route('/tour-stats').get(TourController.getTourStats);
 router.route('/monthly-plan/:year').get(AuthController.protect,AuthController.restrictTo('admin', 'lead-guide', 'guide'), TourController.getMonthlyPlan);
   // при вызове метода сначала выполняется AuthController потом TourController
 
+//standart way of specifying the url!
+router
+  .route('/tours-within/:distance/center/:lanlng/unit/:unit')
+  .get(TourController.getToursWithin)
+
+
   // таким же образом скорее всего и формируются роли и т
 router
   .route('/')

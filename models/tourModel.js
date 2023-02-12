@@ -135,7 +135,9 @@ const tourSchema = new mongoose.Schema(
 // if we delete such field we need to remove slug index to
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
-
+// for geospatial data on the earth like sphere 
+// fictional points on a simple two dimensional plane
+tourSchema.index({ startLocation: '2dsphere'})
 
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;

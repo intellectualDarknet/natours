@@ -1,6 +1,7 @@
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory')
+const AppError = require('../utils/appError')
 
 class TourController {
   aliasTopTours = (req, res, next) => {
@@ -94,6 +95,32 @@ class TourController {
       }
     });
   });
+
+// /tours-distance?distance=233,center=-40,45&unit=mi
+// /tours-distance/233/center/-40,45/unit/mi this path is cleaner so
+//  35.479862, 139.300207
+
+  getToursWithin = catchAsync(async (req, res, next) => {
+    // getting the params from this thing
+    const { distance, lanlng, unit } = req.params
+
+    const [lat, lng] = lanlng.split(',')
+
+    // average radius of the earth in miles or km
+    const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1
+    if (!lat || !lng) next(new AppError('Please provide latitutr and longtitude in the format lat, lng.', 400))
+
+    console.log(distance, lat, lng,  unit)
+
+    const tours = await Tour.find({ 
+      startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] }} 
+    })
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      tours
+    })
+  })
 }
 
 module.exports = new TourController();
