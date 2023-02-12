@@ -65,8 +65,8 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   ])
 
   await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating.toFixed(2)
+    ratingsQuantity: stats[0]?.nRating || 0,
+    ratingsAverage: stats[0]?.avgRating?.toFixed(2) || 4.5
   })
   console.log('ReviewFunction', this)
   console.log('stats', stats)
@@ -78,15 +78,42 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
 //post middleware doesnt have access to next
 
 reviewSchema.post('save', function () {
+
+  
   // this points doc
 
   // method is avaliable only for the class so 
   // instead of Review we call this constructor
   // because it doesnt exist yet
   // this.constructor points to the model
-
+  
+  // method works after the result is saved in the db
+  // we dont have access to query so in the post method!
   this.constructor.calcAverageRatings(this.tour)
 })
+
+// maybe because save is called on doc
+// but findOne is called on the Model
+
+// for update 
+
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+  // to get document that is proccessed findOne
+  // here this == query
+  this.r = await this.findOne()
+  next()
+})
+
+reviewSchema.post(/^findOneAnd/, async function(next) {
+  // this.findOne will not work here because the query is executed
+  // this === query 
+  // this.r === to doc
+  // this.constructor === this.r.tour
+
+  // lets do it here after saving result in the database
+  await this.r.constructor.calcAverageRatings(this.r.tour)
+})
+
 
 
 const Review = mongoose.model('Review', reviewSchema);
