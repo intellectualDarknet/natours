@@ -19,6 +19,13 @@ class UserController {
       data: null
     });
   });
+
+  getMe = (req, res, next) => {
+    req.params.id = req.user.id
+    next()
+  }
+
+  createUser = factory.createOne(User)
 }
 
 module.exports = new UserController();

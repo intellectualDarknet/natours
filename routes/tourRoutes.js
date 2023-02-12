@@ -14,20 +14,19 @@ router
   .get(TourController.aliasTopTours, TourController.getAllTours);
 
 router.route('/tour-stats').get(TourController.getTourStats);
-router.route('/monthly-plan/:year').get(TourController.getMonthlyPlan);
+router.route('/monthly-plan/:year').get(AuthController.protect,AuthController.restrictTo('admin', 'lead-guide', 'guide'), TourController.getMonthlyPlan);
   // при вызове метода сначала выполняется AuthController потом TourController
 
   // таким же образом скорее всего и формируются роли и т
 router
   .route('/')
-
   .get(AuthController.protect, TourController.getAllTours)
-  .post(TourController.createTour);
+  .post(AuthController.protect, AuthController.restrictTo('admin', 'lead-guide') ,TourController.createTour);
 
 router
   .route('/:id')
   .get(TourController.getTour)
-  .patch(AuthController.protect, AuthController.restrictTo('user'), TourController.updateTour)
+  .patch(AuthController.protect, AuthController.restrictTo('admin', 'lead-guide'), TourController.updateTour)
   .delete(
     AuthController.protect,
     AuthController.restrictTo('admin', 'lead-guide'),

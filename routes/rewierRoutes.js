@@ -10,15 +10,19 @@ const ReviewController = require('../controllers/reviewController')
 // so this how our route get params in tourRoutes .js
 const router = express.Router({ mergeParams: true });
 
+
 router
   .route('/')
   .get(ReviewController.getAllReview)
   .post(AuthController.protect, AuthController.restrictTo('user'), ReviewController.setTourUserIds, ReviewController.createReview)
   
+router.use(AuthController.protect)
+
+
 router
   .route('/:id')
-  .get(AuthController.protect, AuthController.restrictTo('user'), reviewController.getReview)
-  .patch(AuthController.protect, AuthController.restrictTo('user'), ReviewController.updateReview)
-  .delete(AuthController.protect, AuthController.restrictTo('admin'), ReviewController.deleteReview)
+  .get(AuthController.restrictTo('user'), reviewController.getReview)
+  .patch(AuthController.restrictTo('user'), ReviewController.updateReview)
+  .delete(AuthController.restrictTo('admin'), ReviewController.deleteReview)
 
 module.exports = router;
