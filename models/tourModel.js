@@ -171,12 +171,13 @@ tourSchema.pre(/^find/, function(next) {
 
 
 // AGGREGATION MIDDLEWARE
-tourSchema.pre('aggregate', function(next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+// it adds aggre match in our query so remove it to geoNear work
+// tourSchema.pre('aggregate', function(next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
 
-  console.log(this.pipeline());
-  next();
-});
+//   console.log(this.pipeline());
+//   next();
+// });
 
 tourSchema.pre(/^find/, async function(next) {
   this.populate({

@@ -22,6 +22,11 @@ router
   .route('/tours-within/:distance/center/:lanlng/unit/:unit')
   .get(TourController.getToursWithin)
 
+router
+  .route('/distances/:latlng/unit/:unit')
+  .get(TourController.getDistances)
+
+
 
   // таким же образом скорее всего и формируются роли и т
 router

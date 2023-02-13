@@ -121,6 +121,44 @@ class TourController {
       tours
     })
   })
+  
+  getDistances = catchAsync(async ( req, res, next) => {
+    const { latlng, unit } = req.params
+    const [lat, lng] = latlng.split(',')
+
+    if (!lat || !lng) next(new AppError('Please provide latitutr and longtitude in the format lat, lng.', 400))
+
+    // for geospartial aggregation there is only 1 single stage
+    // geoNear
+
+    // convertions to miles kirometrs
+    const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+
+    const distances = await Tour.aggregate([
+      {
+        $geoNear: {
+          // from which to calculate the distances?
+          near: {
+            type: 'Point',
+            coordinates: [lng * 1, lat * 1]
+          },
+          distanceField: 'distance',
+          distanceMultiplier: multiplier,
+        }
+      },
+      {
+        $project: {
+          distance: 1,
+          name: 1
+        }
+      }
+    ])
+
+    res.status(200).json({
+      status: 'success',
+      distances
+    })
+  })
 }
 
 module.exports = new TourController();
