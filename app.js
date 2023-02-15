@@ -1,3 +1,4 @@
+const path = require('path')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const express = require('express');
@@ -13,6 +14,13 @@ const hpp = require('hpp');
 
 const app = express();
 
+
+// setting up the pug
+// npm i pug
+app.set('view engine', 'pug')
+// set path simply to view is not ideal in node 
+// so './views' transforms 
+app.set('views', path.join(__dirname, 'views'))
 
 //set security HTTP headers 
 app.use(helmet())
@@ -30,6 +38,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this API, please try again in an hour',
 });
 
+
+app.get('/', (req, res, next) => {
+  // render the template we pass in
+  // automatically knows that it is a pug file
+  res.status(200).render('base')
+})
 
 //use before every request GG
 // in this case use for api
@@ -61,7 +75,7 @@ app.use(hpp({
   ]
 }))
 
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
