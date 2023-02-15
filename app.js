@@ -8,72 +8,34 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const reviewRouter = require('./routes/rewierRoutes')
 const userRouter = require('./routes/userRoutes');
+const viewRouter = require('./routes/viewRoutes')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean');
 const hpp = require('hpp');
 
 const app = express();
 
-
-// setting up the pug
-// npm i pug
 app.set('view engine', 'pug')
-// set path simply to view is not ideal in node 
-// so './views' transforms 
 app.set('views', path.join(__dirname, 'views'))
-
-//set security HTTP headers 
 app.use(helmet())
 
-// 1) MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
 const limiter = rateLimit({
-  // max should depend on our APP requests
   max: 100,
-  // allow 100 request per 1h
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this API, please try again in an hour',
 });
 
-
-app.get('/', (req, res, next) => {
-  // render the template we pass in
-  // automatically knows that it is a pug file
-  // to pass the vairables use second parameter
-  
-  res.status(200).render('base', {
-    tour: 'The Forest Hiker',
-    user: 'Jonas'
-  })
-})
-
-//use before every request GG
-// in this case use for api
 app.use('/api/', limiter);
 
-// Body parse, reading data from body into req.body
-// limits our requets we can sent only 10kb the same thing
-// according to the our app request
 app.use(express.json({ limit: '10kb'}));
-
-// Data sanitization against noSQL query injection
-// filters all the $ and .
 app.use(mongoSanitize())
-
-// Data sanitization agains XSS
-// will clean input from malicious html code with jscode attached to it
-// if it will occur in the html page the script will work
-// mongoose validation is good protection against xss
 
 app.use(xss())
 
-
-// Prevent parameter pollution
-// removes repeating parametres
-// but we can whitelist some
 app.use(hpp({
   whitelist: [ 
     'duration'
@@ -87,18 +49,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/overview', (req, res) => {
-  res.status(200).render('overview', {
-    title: 'All Tours'
-  })
-})
-
-app.get('/tour', (req, res) => {
-  res.status(200).render('tour', {
-    title: 'All Forest Hiker Tour'
-  })
-})
-
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
