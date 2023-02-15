@@ -10,34 +10,14 @@ html
 
   body
 
-    header.header 
-      nav.nav.nav--tours
-        a.nav__el(href='#') All tours  
-      .header__logo
-        img(src='img/logo-white.png' alt='Natours logo')
-      nav.nav.nav--user
-        //- for auth user
-        //- a.nav__el(href='#') My bookings
-        //- a.nav__el(href='#')
-        //-   img.nav__user-img(src='img/user.jpg' alt='User photo')
-        //-   span Jonas
-        button.nav__el Log in
-        button.nav__el.nav__el--cta Sign up
+
+    //- add Header
+    include _header
 
     //- CONTENT
     section.overview
       h1= tour
 
     //- Footer
-    footer.footer
-      .footer__logo 
-        img(src='img/logo-green.png' alt='Natour logo')
-      ul.footer__nav
-        //- for the list we can use that sint
-        li: a(href='#') About us
-        li: a(href='#') Download apps
-        li: a(href='#') Become a guide
-        li: a(href='#') Careers
-        li: a(href='#') Contact
-      p.footer__copyright &copy; by Jonas Schmedtmann. All rights reserved. Feel free to use this project for your own purposes, except productin your own course or tutorials! 
-    
+    include _footer
+  
