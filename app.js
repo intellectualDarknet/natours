@@ -42,7 +42,12 @@ const limiter = rateLimit({
 app.get('/', (req, res, next) => {
   // render the template we pass in
   // automatically knows that it is a pug file
-  res.status(200).render('base')
+  // to pass the vairables use second parameter
+  
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    user: 'Jonas'
+  })
 })
 
 //use before every request GG

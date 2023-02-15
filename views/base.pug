@@ -1,1 +1,27 @@
-h1 The park Camper
+doctype html
+html 
+  head 
+    //- to write variable in string ${tour}
+    title Natours #{tour}
+    //- we can easily use pure html here
+    
+    //- <link rel='stylesheet' href='css/style.css'>
+    
+    //- params need to be in single quotes 
+    //- connect css and icon
+    //- css/style.css after compilation get file from the final folder
+    link(rel='stylesheet' href='css/style.css')
+    link(rel='shortcut icon' type='image/png' href='img/favicon.png')
+  
+  body
+    //- to call a local variable use tag= variableName
+    h1= tour
+    //- we can run simple js functions
+    //- and do JS 
+
+    h2= user.toUpperCase()
+    p This is just some text
+
+    //- run JS code and define variables
+    - const x = 9;
+    h2= 2 * x
