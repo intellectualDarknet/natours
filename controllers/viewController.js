@@ -23,7 +23,7 @@ class ViewsController {
     })
 
     res.status(200).render('tour', {
-      title: 'All Forest Hiker Tour',
+      title: tour.name + ' tour',
       tour: tour
     })
   })
