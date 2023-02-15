@@ -16,11 +16,17 @@ class ViewsController {
     })
   }
 
-  getTour = (req, res) => {
-    res.status(200).render('tour', {
-      title: 'All Forest Hiker Tour'
+  getTour = catchAsync(async (req, res) => {
+    const tour = await Tour.findOne({ slug: req.params.slug}).populate({
+      path: 'reviews',
+      fields: 'review rating user'
     })
-  }
+
+    res.status(200).render('tour', {
+      title: 'All Forest Hiker Tour',
+      tour: tour
+    })
+  })
 }
 
 module.exports = new ViewsController();
