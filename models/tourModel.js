@@ -37,7 +37,7 @@ const tourSchema = new mongoose.Schema(
       max: [5, 'Rating must be below 5.0'],
       // this function will be run each time 
       // that a new value is set for this field 
-      set: val => val.toFixed(2)
+      set: val => Math.floor(val * 100) / 100
     },
     ratingsQuantity: {
       type: Number,
@@ -82,6 +82,18 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point']
+        },
+        coordinates: [Number],
+        description: String,
+        day: Number
+      }
+    ],
     startLocation: {
       // GeoJSON in order to specify location
       type: {

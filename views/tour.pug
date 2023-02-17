@@ -2,6 +2,11 @@ extends base
 
 include _reviewCard
 
+//- special sintaxsis to not to replace but 
+//- add a new lines
+block append head
+  script(src='/js/mapbox.js')
+
 mixin overviewBox(label, text, icon) 
   .overview-box__detail
     svg.overview-box__icon
@@ -69,7 +74,11 @@ block content
 
 
   section.section-map
-    #map
+    //- we can specify data attribute in HTML
+    //- and then easily read it using Javascript
+    //- # means id
+    #map(data-locations=`${JSON.stringify(tour.locations)}`)
+
 
   section.section-reviews
     .reviews

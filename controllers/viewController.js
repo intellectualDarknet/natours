@@ -22,6 +22,8 @@ class ViewsController {
       fields: 'review rating user'
     })
 
+    console.log('getTour', tour)
+
     res.status(200).render('tour', {
       title: tour.name + ' tour',
       tour: tour

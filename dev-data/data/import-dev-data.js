@@ -21,6 +21,7 @@ const reviews = JSON.parse(fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
+    console.log('data to import', tours)
     await Tour.create(tours);
     // turn off validation and turn off the password encryption because 
     // they are not ecrypted
