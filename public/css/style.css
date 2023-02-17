@@ -110,6 +110,14 @@ body {
   background-color: #eb4d4b;
 }
 
+.marker {
+  background-image: url('../img/pin.png');
+  background-size: cover;
+  width: 32px;
+  height: 40px;
+  cursor: pointer;
+}
+
 .heading-secondary {
   font-size: 2.25rem;
   text-transform: uppercase;
