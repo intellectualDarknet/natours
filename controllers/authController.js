@@ -94,7 +94,12 @@ class AuthController {
       req.headers.authorization.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.jwt) {
+      // cookie is saved automatically on your PC so you dont need to exactly write the cookie
+      // 
+      token = req.cookies.jwt
     }
+
     if (!token) {
       return next(
         new AppError('You are not logged in! Please log in to get access', 401)
