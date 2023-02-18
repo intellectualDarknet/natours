@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Learning node, express and mongoDB",
   "main": "app.js",
+  "targets": {
+    "main": false
+  },
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "build": "parcel build ./public/js/index.js --dist-dir ./public/js/bundled"
   },
   "author": "Jonas Schmedtmann",
   "license": "ISC",
@@ -40,6 +44,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
+    "parcel": "^2.8.3",
     "prettier": "^1.17.0"
   },
   "engines": {

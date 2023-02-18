@@ -1,9 +1,10 @@
 // to polifill some features of js don't know if its actual or not
-import { login } from './login.js'
+import { login, logout } from './login.js'
 import { displayMap } from './mapbox.js'
 
 const mapBox = document.getElementById('map')
 const loginForm = document.querySelector('.form')
+const logOutBtn = document.querySelector('.nav__el-logout')
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations)
@@ -12,7 +13,6 @@ if (mapBox) {
 
   document.querySelector('.form').addEventListener('submit', (e) => {
     e.preventDefault();
-
 
     login(email, password)
 
@@ -26,5 +26,6 @@ if (loginForm) {
     const password = document.getElementById('password').value
     login(email, password)
   })
-
 }
+console.log('btn',logOutBtn)
+if (logOutBtn) logOutBtn.addEventListener('click', logout)

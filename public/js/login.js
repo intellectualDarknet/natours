@@ -1,5 +1,6 @@
+import { showAlert } from './alerts.js'
+
 export const login = async (email, password) => {
-  console.log(email, password)
   try {
     // we can send information from here or directly from the form
       // axious returns promise so to cathc it use await
@@ -14,14 +15,30 @@ export const login = async (email, password) => {
     }
   })
 
-  if (res.data.status === 'success') {}
-    alert('Logged in successfully!')
+  if (res.data.status === 'success') {
+    showAlert('success', 'Logged in successfully!')
     window.setTimeout(() => {
-      // to load another page
       location.assign('/')
     }, 1500)
-  } catch(err) {
-    // notification for the user
-    alert(err.response.data.message)
+  }} 
+  catch(err) {
+    showAlert('error', err.response.data.message)
+  }
+}
+
+export const logout = async () => {
+    // try catch block if we lose internet connection
+    console.log('logout')
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://localhost:5000/api/v1/users/logout',
+    })
+    // we are logged out but we see the same structire (conditional rendering)
+    // reload
+    if (res.data.status = 'success') location.reload(true)
+  }
+  catch(err) {
+    showAlert('error', err.message)
   }
 }

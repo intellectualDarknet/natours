@@ -23,6 +23,7 @@ const createSendToken = (user, statusCode, res) => {
     // cookie can be sent encrypted connection
     //secure: true
     // cant be accessed or midified by browser
+
     httpOnly: true
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
@@ -135,42 +136,45 @@ class AuthController {
   });
 
   // only for rendered pages, no errors
-  isLoggedIn = catchAsync(async (req, res, next) => {
+  isLoggedIn = async (req, res, next) => {
     // 1) Getting token and check it!
-
+    
     let token;
     // for our web site token will be sent by cookie not by auth header!!!
     if (req.cookies.jwt) {
+      try {
+        token = req.cookies.jwt
 
-      //  verify the token
-      
-      token = req.cookies.jwt
+        const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+        const currentUser = await User.findById(decoded.value);
+        if (!currentUser)
+          return next();
 
-      const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
-
-      // 3) Check if userStillExists
-      // if the user still exists and dont change his password!
-
-      const currentUser = await User.findById(decoded.value);
-      if (!currentUser)
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+          return next();
+        }
+        res.locals.user = currentUser
         return next();
 
-      // 4) Check if user changed password after the token was issued
-      // issued at from decoded
-
-      if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next();
+      } catch(err) {
+        console.log(err.stack)
+        return next()
       }
 
-      // THERE IS A LOGGED IN USER
-      // make our user accessible in pug
-      // write anything in locals for pug template to get it
-      res.locals.user = currentUser
-      // to ensure that next will be called only 1 time
-      return next();
     }
     next();
-  });
+  };
+
+    // here is the problem we cant manipulate cookie in localstorage or in blowser so we ll just sent new cookie
+    // without token so this is more effective than
+  logout = (req, res) => {
+    // set up new cookie
+    res.cookie('jwt', 'loggedout', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true
+    })
+    res.status(200).json({ status: 'success' })
+  }
 
   restrictTo = (...roles) => {
     return async (req, res, next) => {
