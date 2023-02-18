@@ -1,4 +1,7 @@
+const axios = require("axios")
+
 const login = async (email, password) => {
+  console.log(email, password)
   try {
     // we can send information from here or directly from the form
       // axious returns promise so to cathc it use await
@@ -25,12 +28,4 @@ const login = async (email, password) => {
   }
 }
 
-document.querySelector('.form').addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById('email').value
-  const password = document.getElementById('password').value
-
-  login(email, password)
-
-})
+module.exports = login

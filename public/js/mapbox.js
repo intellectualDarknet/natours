@@ -1,10 +1,9 @@
 // to integrate on the client side
 console.log('hello from the client side')
-const locations = JSON.parse(document.getElementById('map').dataset.locations)
-console.log(locations)
 
+const displayMap = locations => {
 // access token for mapbox
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGVhbXN0YXIiLCJhIjoiY2xlOHFla2RpMGN2ejNubHJwaDRrNWdvOSJ9.K6TeUGIPnXkZZpHgrdQYRw';
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZGVhbXN0YXIiLCJhIjoiY2xlOHFla2RpMGN2ejNubHJwaDRrNWdvOSJ9.K6TeUGIPnXkZZpHgrdQYRw';
 
 var map = new mapboxgl.Map({
   // container here has map value so 
@@ -61,3 +60,6 @@ map.fitBounds(bounds, {
     right: 100
   }
 });
+}
+
+module.exports = displayMap
