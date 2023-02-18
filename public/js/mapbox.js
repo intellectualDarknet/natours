@@ -1,7 +1,7 @@
 // to integrate on the client side
 console.log('hello from the client side')
 
-const displayMap = locations => {
+export const displayMap = locations => {
 // access token for mapbox
   mapboxgl.accessToken = 'pk.eyJ1IjoiZGVhbXN0YXIiLCJhIjoiY2xlOHFla2RpMGN2ejNubHJwaDRrNWdvOSJ9.K6TeUGIPnXkZZpHgrdQYRw';
 
@@ -61,5 +61,3 @@ map.fitBounds(bounds, {
   }
 });
 }
-
-module.exports = displayMap

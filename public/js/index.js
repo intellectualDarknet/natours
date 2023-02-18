@@ -1,6 +1,6 @@
 // to polifill some features of js don't know if its actual or not
-const login =  require('./login')
-const displayMap =  require('./mapbox')
+import { login } from './login.js'
+import { displayMap } from './mapbox.js'
 
 const mapBox = document.getElementById('map')
 const loginForm = document.querySelector('.form')

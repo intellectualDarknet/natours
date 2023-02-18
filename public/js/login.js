@@ -1,6 +1,4 @@
-const axios = require("axios")
-
-const login = async (email, password) => {
+export const login = async (email, password) => {
   console.log(email, password)
   try {
     // we can send information from here or directly from the form
@@ -27,5 +25,3 @@ const login = async (email, password) => {
     alert(err.response.data.message)
   }
 }
-
-module.exports = login
