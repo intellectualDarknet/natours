@@ -16,7 +16,7 @@ class ViewsController {
     })
   }
 
-  getTour = catchAsync(async (req, res) => {
+  getTour = catchAsync(async (req, res, next) => {
     const tour = await Tour.findOne({ slug: req.params.slug}).populate({
       path: 'reviews',
       fields: 'review rating user'
@@ -29,6 +29,13 @@ class ViewsController {
       tour: tour
     })
   })
+
+  getLoginForm = catchAsync((req, res, next) => {
+    res.status(200).render('login', {
+      title: 'Log into your account'
+    })
+  })
+  
 }
 
 module.exports = new ViewsController();
