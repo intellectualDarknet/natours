@@ -6,9 +6,8 @@ include _reviewCard
 //- add a new lines
 block append head
     //- we use here a script because a parsel has to compile it
-  script(src='https://api.mapbox.com/mapbox-gl-js/v0.54.1/mapbox-gl.js')
-  link(href='mapbox://styles/deamstar/cle8qujuh008601qmhg4plk9y' rel='stylesheet')
-  //- script(src='/js/mapbox.js')
+    script(src='https://api.mapbox.com/mapbox-gl-js/v0.54.1/mapbox-gl.js')
+    link(href='mapbox://styles/deamstar/cle8qujuh008601qmhg4plk9y' rel='stylesheet')
 
 mixin overviewBox(label, text, icon) 
   .overview-box__detail

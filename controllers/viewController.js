@@ -1,4 +1,5 @@
-const Tour = require('../models/tourModel')
+const Tour = require('../models/tourModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
 
 class ViewsController {
@@ -22,7 +23,9 @@ class ViewsController {
       fields: 'review rating user'
     })
 
-    console.log('getTour', tour)
+    if (!tour) {
+      return next(new AppError('There is no tour with that name', 404))
+    }
 
     res.status(200).render('tour', {
       title: tour.name + ' tour',
