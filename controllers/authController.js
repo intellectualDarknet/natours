@@ -134,6 +134,44 @@ class AuthController {
     next();
   });
 
+  // only for rendered pages, no errors
+  isLoggedIn = catchAsync(async (req, res, next) => {
+    // 1) Getting token and check it!
+
+    let token;
+    // for our web site token will be sent by cookie not by auth header!!!
+    if (req.cookies.jwt) {
+
+      //  verify the token
+      
+      token = req.cookies.jwt
+
+      const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+
+      // 3) Check if userStillExists
+      // if the user still exists and dont change his password!
+
+      const currentUser = await User.findById(decoded.value);
+      if (!currentUser)
+        return next();
+
+      // 4) Check if user changed password after the token was issued
+      // issued at from decoded
+
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // THERE IS A LOGGED IN USER
+      // make our user accessible in pug
+      // write anything in locals for pug template to get it
+      res.locals.user = currentUser
+      // to ensure that next will be called only 1 time
+      return next();
+    }
+    next();
+  });
+
   restrictTo = (...roles) => {
     return async (req, res, next) => {
       if (!roles.includes(req.user.role))

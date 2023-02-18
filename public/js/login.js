@@ -1,5 +1,6 @@
 const login = async (email, password) => {
   try {
+    // we can send information from here or directly from the form
       // axious returns promise so to cathc it use await
   // only modern browsers can use async await so be aware of that
   // if there is an error axious will throw error
@@ -12,11 +13,15 @@ const login = async (email, password) => {
     }
   })
 
-  console.log(res.s)
-
+  if (res.data.status === 'success') {}
+    alert('Logged in successfully!')
+    window.setTimeout(() => {
+      // to load another page
+      location.assign('/')
+    }, 1500)
   } catch(err) {
-    // axious
-    console.log(err.response.data)
+    // notification for the user
+    alert(err.response.data.message)
   }
 }
 
