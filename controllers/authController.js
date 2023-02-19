@@ -131,6 +131,7 @@ class AuthController {
     }
     // Grants access to the middleware
     req.user = freshUser;
+    res.locals.user = freshUser 
     console.log(req.user);
     next();
   });
