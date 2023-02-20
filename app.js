@@ -36,6 +36,9 @@ app.use(express.json({ limit: '10kb'}));
 // to get access to the cookie
 app.use(cookieParser())
 
+// allows us to send data from the form!
+app.use(express.urlencoded({ extended: true , limit: '10kb'}))
+
 app.use(mongoSanitize())
 
 app.use(xss())
