@@ -10,29 +10,21 @@ const xss = require('xss-clean')
 
 // many to many usually use refernce not embeding
 
-
 // there are 2 authentification for on the server side and client side
 
 const createSendToken = (user, statusCode, res) => {
   const token = user.createToken();
-
   const cookieOptions = {
     expires: new Date(
-      Date.now() + process.env.jWT_COOKIE_EXPIRES_IN * 60 * 60 * 24 * 1000
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    // cookie can be sent encrypted connection
-    //secure: true
-    // cant be accessed or midified by browser
-
     httpOnly: true
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  // every time when we send a request we send cookie and new one replace old one
-
   res.cookie('jwt', token, cookieOptions);
 
-  // to prevent showing password when creating document!
+  // Remove password from output
   user.password = undefined;
 
   res.status(statusCode).json({
@@ -171,7 +163,7 @@ class AuthController {
   logout = (req, res) => {
     // set up new cookie
     res.cookie('jwt', 'loggedout', {
-      expires: new Date(Date.now() + 10 * 1000),
+      expires: new Date(Date.now()),
       httpOnly: true
     })
     res.status(200).json({ status: 'success' })
@@ -265,26 +257,22 @@ class AuthController {
   };
 
   updatePassword = catchAsync(async (req, res, next) => {
-    console.log('update');
-    // 1) get user from collection
-    const user = await User.findById(req.user.id).select('+password');
+  // 1) Get user from collection
+  const user = await User.findById(req.user.id).select('+password');
 
-    if (
-      !user ||
-      !(await user.correctPassword(this.body.passwordCurrent, user.password))
-    ) {
-      return next(new AppError('Your current password is wrong'), 401);
-    }
-    // 2) Check if posted password is correct
-    console.log('update');
-    // 3) If so, update password
-    user.password = this.body.password;
-    user.passwordConfirm = this.body.passwordConfirm;
-    // to work our middlewares and hash password insted of using findOneAndUpdate these methods wont do that
-    await user.save();
-    // 4) Log user in, send JWT
-    console.log('token');
-    createSendToken(user, 200, res);
+  // 2) Check if POSTed current password is correct
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('Your current password is wrong.', 401));
+  }
+
+  // 3) If so, update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // User.findByIdAndUpdate will NOT work as intended!
+
+  // 4) Log user in, send JWT
+  createSendToken(user, 200, res);
   });
 }
 
