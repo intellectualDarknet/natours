@@ -3,6 +3,7 @@ const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory')
 const multer = require('multer');
 const AppError = require('../utils/appError');
+const sharp = require('sharp')
 
 // dest where the images will be saved
 // we are not saving in db but in hash
@@ -12,6 +13,7 @@ const AppError = require('../utils/appError');
 
 // cannot siply set to public
 // cb is like next 
+
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     // to define destination need call cb
@@ -28,6 +30,9 @@ const multerStorage = multer.diskStorage({
   }
 })
 
+// will store as Buffer
+const multerMemoStorage = multer.memoryStorage()
+
 const multerFilter = (req, file, cb) => {
   // test all kind of files on an image
   // mime type will always start with image for an image so 
@@ -42,13 +47,33 @@ const multerFilter = (req, file, cb) => {
 }
 
 const upload = multer({
-  storage: multerStorage,
+  storage: multerMemoStorage,
   fileFilter: multerFilter
 })
 
 class UserController {
 
   uploadUserPhoto = upload.single('photo')
+
+  resizeUserPhoto = (req, res, next) => {
+
+    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+
+    // idealy all the images are squares but it in reallity they are not
+    if (!req.file) return next()
+    // in this case it is better to save file not in db but in memory
+    // so 
+    // take from memo
+    // we want square imgs or can use css options
+    // convert to jpg even compress
+    sharp(req.file.buffer)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({ quality : 90})
+      .toFile(`public/img/users/${req.file.filename}`)
+
+    next()
+  }
 
   getAllUsers = factory.getAll(User)
   getUser = factory.getOne(User);
