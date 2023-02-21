@@ -18,6 +18,8 @@ exports.deleteOne = Model => catchAsync(async (req, res, next) => {
 
 exports.updateOne = Model => catchAsync(async (req, res, next) => {
   console.log('updateOne')
+  console.log('request file', req.file)
+  console.log('request body', req.body)
     const doc = await Model.findByIdAndUpdate(req.params.id || req.user.id, req.body, {
       new: true,
       runValidators: true

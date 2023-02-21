@@ -1,10 +1,12 @@
 const express = require('express');
 const UserController = require('./../controllers/userController');
 const AuthController = require('./../controllers/authController');
-
+const multer = require('multer')
 const router = express.Router();
 
-
+// dest where the images will be saved
+// we are not saving in db but in hash
+const upload = multer({ dest: 'public/img/users'})
 
 router.post('/signup', AuthController.signUp);
 router.get('/logout', AuthController.logout);
@@ -20,7 +22,9 @@ router.use(AuthController.protect)
 router.patch('/updateMyPassword', AuthController.updatePassword);
 
 router.get('/me', UserController.getMe, UserController.getUser)
-router.patch('/updateMe', UserController.updateMe);
+//  single means 1 photo and photo is the field that will be updated
+//  middle which put info into middleware function
+router.patch('/updateMe', upload.single('photo'), UserController.updateMe);
 // user will became unaccessible but it is still
 // okay to use delete method
 router.delete('/deleteMe', UserController.deleteMe);
