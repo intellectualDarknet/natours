@@ -28,7 +28,7 @@ const bookingSchema = new mongoose.Schema({
   }
 })
 
-Booking.pre(/^find/, function (next) {
+bookingSchema.pre(/^find/, function (next) {
   // generally dont care because there are not be many calls for bookings 
   // because only guides, and admins,
   // will be allowed to do them

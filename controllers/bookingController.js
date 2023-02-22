@@ -1,5 +1,6 @@
-const Tour = require('./../models/tourModel');
-const catchAsync = require('./../utils/catchAsync');
+const Tour = require('../models/tourModel');
+const Booking = require('../models/bookingModel')
+const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory')
 const AppError = require('../utils/appError')
 // after passing the key will get methods to work with
@@ -11,7 +12,8 @@ class BookingController {
     // 1) Get the currently booked tour
     const tour = await Tour.findById(req.params.tourId)
 
-    console.log(tour)
+    console.log('address' ,`${req.protocol}://${req.get('host')}`)
+    
     // 2) Create checkout session
     const session = await stripe.checkout.sessions.create({
       // general info about session
@@ -19,7 +21,9 @@ class BookingController {
       payment_method_types: ['card'],
       mode: 'payment',
       // as soon as the payment was charged
-      success_url: `${req.protocol}://${req.get('host')}/`,
+      // not secure at all and everyone can book a tour without a pay
+      // we go to the path / and works middleware
+      success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour${tour.slug}`,
       // 
       customer_email: req.user.email,
@@ -47,6 +51,19 @@ class BookingController {
       status: 'success',
       session
     })
+  })
+
+  createBookingCheckoout = catchAsync(async (req, res, next) => {
+    const { tour, user, price } = req.query
+    // temporary solution because it is unsecure everyone can make bookings
+    if (!tour && !user && !price) return next() 
+    await Booking.create({ tour, user, price })
+
+
+    // making a little secure with the redirect clear through closure 
+    // 1 calling 1 time createBooking then redirecting without params to the same path
+    // exit throught the next
+    res.redirect(req.originalUrl.split('?')[0])
   })
 }
 
