@@ -15,8 +15,18 @@ module.exports = class Email {
   newTransport() {
     //differs in prod and dev
     if (process.env.NODE_ENV === 'production') {
-      //  just skip for now
-      return 1 
+      //  SendGrid
+      return nodemailer.createTransport({
+        // is predefined service
+        service: 'SendGrid',
+        secure: false,
+        auth: {
+          user: process.env.SENDGRID_USERNAME,
+          pass: process.env.SENDGRID_PASSWORD
+        },
+        secure:false,
+        tls: {rejectUnauthorized: false},
+      })
     }
 
     return nodemailer.createTransport({
@@ -36,7 +46,8 @@ module.exports = class Email {
     // we can pass data to the pug file
     const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
       firstName: this.firstName,
-      url: this.url
+      url: this.url,
+      subject
     })
 
     // 2) Define email options
