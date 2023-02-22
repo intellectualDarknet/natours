@@ -9,6 +9,7 @@ const tourRouter = require('./routes/tourRoutes');
 const reviewRouter = require('./routes/rewierRoutes')
 const userRouter = require('./routes/userRoutes');
 const viewRouter = require('./routes/viewRoutes')
+const bookingRouter = require('./routes/bookingRoutes')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean');
 const hpp = require('hpp');
@@ -60,6 +61,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/booking', bookingRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
