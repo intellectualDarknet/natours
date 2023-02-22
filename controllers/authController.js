@@ -4,9 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const sendEmail = require('./../utils/email');
-const mongoSanitize = require('express-mongo-sanitize')
-const xss = require('xss-clean')
+const Email = require('../utils/email')
 
 // many to many usually use refernce not embeding
 
@@ -199,14 +197,10 @@ class AuthController {
 
     const message = `Forgot your password? Submit your patch request with your new password and passwordConfirm to ${resetURL}.\n If you didn't forget your password please ignore this email!`;
     try {
-      sendEmail({
-        from: 'sender@example.com',
-        to: 'recipient@example.com',
-        subject: 'Message',
-        email: 'ladyblaumeux24@gmail.com',
-        message
-      });
+      await new Email(user, resetURL).sendPassword()
+
     } catch (err) {
+      console.log(err.stack)
       user.createPasswordResetToken = undefined;
       user.passwordResetExpires = undefined;
       await user.save({ validateBeforeSave: false });

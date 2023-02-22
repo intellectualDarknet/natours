@@ -34,7 +34,7 @@ module.exports = class Email {
     // we dont want to actually render but to create
     // html so we can send this html as emai
     // we can pass data to the pug file
-    const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`, {
+    const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
       firstName: this.firstName,
       url: this.url
     })
@@ -47,7 +47,7 @@ module.exports = class Email {
       subject,
       html,
       // we need a way of converting html into simple text so
-      text: htmlToText.fromString(html)
+      text: htmlToText.htmlToText(html)
     };
 
     // 3) Create a transport and send email
@@ -56,5 +56,12 @@ module.exports = class Email {
 
   async sendWelcome() {
     await this.send('Welcome', 'Welcome to the Natours Family!')
+  }
+
+  async sendPassword() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token (valid for only 10 minutes)'
+    )
   }
 }
