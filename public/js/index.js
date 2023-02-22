@@ -2,24 +2,22 @@
 import { login, logout } from './login.js'
 import { updateSettings } from './updateSettings.js'
 import { displayMap } from './mapbox.js'
+import { bookTour } from './stripe.js'
 
 const mapBox = document.getElementById('map')
 const loginForm = document.querySelector('.form--login')
 const logOutBtn = document.querySelector('.nav__el-logout')
 const userDataForm = document.querySelector('.form-user-data')
 const userPasswordForm = document.querySelector('.form-user-password')
+const bookBtn = document.getElementById('book-tour')
 
+
+console.log(mapBox)
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations)
 // separate responsibilities!
   displayMap(locations)
 
-  document.querySelector('.form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    login(email, password)
-
-  })
 }
 
 if (loginForm) {
@@ -66,3 +64,14 @@ if (userPasswordForm) {
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout)
 
+console.log("bookBtn", bookBtn)
+
+if (bookBtn) {
+  console.log("bookBtn", bookBtn)
+  bookBtn.addEventListener('click', e => {
+    console.log('My event')
+    e.target.textContent = 'Processing...'
+    const tourId = e.target.dataset.tourId
+    bookTour(tourId)
+  })
+}

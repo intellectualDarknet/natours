@@ -34,7 +34,7 @@ class BookingController {
             product_data: {
               name: `${tour.name} Tour`,
               description: tour.summary,
-              images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
+              images: [`http://localhost:5000/img/tours/tour-63f4b1f7ef9984eab72195cf-1676987085622-cover.jpeg`],
             },
           },
         },

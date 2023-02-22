@@ -26,8 +26,6 @@ router
   .route('/distances/:latlng/unit/:unit')
   .get(TourController.getDistances)
 
-
-
   // таким же образом скорее всего и формируются роли и т
 router
   .route('/')
