@@ -31,3 +31,15 @@ process.on('unhandledRejection', err => {
     process.exit(1);
   });
 });
+
+
+// heroku dino (container in which our app is running) restart every 24h in order to keep our app in a healthy state
+// and it does it by sending sick term signal to our node app and app will shut down immediately
+// and this can leave requests that are currently being processed in the air thats is not ideal
+
+process.on('SIGTERM', () => {
+  console.log('!#@!&* SIGTERM RECEIVED. Shutting down gracefully')
+  server.close(() => {
+    console.log('Process terminated!')
+  })
+})

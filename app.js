@@ -15,7 +15,6 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser')
 const compression = require('compression')
-
 const app = express();
 
 app.enable('trust proxy')
