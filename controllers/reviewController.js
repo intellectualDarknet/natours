@@ -26,6 +26,8 @@ class ReviewController {
   getReview = factory.getOne(Review)
   updateReview = factory.updateOne(Review)
   deleteReview = factory.deleteOne(Review)
+
+
 }
 
 module.exports = new ReviewController();

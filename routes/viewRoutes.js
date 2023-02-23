@@ -10,6 +10,7 @@ router.get('/', BookingController.createBookingCheckoout, AuthController.isLogge
 router.get('/login',AuthController.isLoggedIn, ViewsController.getLoginForm)
 router.get('/tour/:slug',AuthController.isLoggedIn, ViewsController.getTour)
 router.get('/me', AuthController.protect, ViewsController.getAccount)
+router.get('/my-tours', AuthController.protect, ViewsController.getMyTours)
 
 router.post('/submit-user-data', AuthController.protect, ViewsController.updateUserData)
 
