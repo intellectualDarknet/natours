@@ -65,6 +65,12 @@ class BookingController {
     // exit throught the next
     res.redirect(req.originalUrl.split('?')[0])
   })
+
+  createBooking= factory.createOne(Booking)
+  getBooking = factory.getOne(Booking, { path: 'tour', select: 'name'})
+  getAllBooking = factory.getAll(Booking)
+  updateBooking = factory.updateOne(Booking)
+  deleteBooking = factory.deleteOne(Booking)
 }
 
 module.exports = new BookingController();

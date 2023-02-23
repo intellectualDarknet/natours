@@ -39,7 +39,13 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
 });
 
 exports.createOne = Model => catchAsync(async (req, res, next) => {
-  const newTour = await Model.create(req.body);
+  let newTour
+  if (req.body.tour && req.body.price && req.body.user) {
+    const { tour, price, user } = req.body
+    newTour = await Model.create({ tour, price, user });
+  } else {
+    newTour = await Model.create(req.body);
+  } 
 
   res.status(201).json({
     status: 'success',
