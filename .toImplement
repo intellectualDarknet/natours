@@ -1,0 +1,14 @@
+1. users can only review a tour that they actually booked
+2. 10 logges in per hour for 1 user
+3. send email with the confirming link to the email as in the real webSites
+4. implement nested booking routes /toures/:id/bookings , users/:id/bookings))
+5. partisipants for the tour and sold our for each of the dates
+ user book tour on this date and increaces amount of participants on the tour 
+6. Refrest tokens?? 
+7. 2FA authentification on the phone
+8. sign up form
+9. user can create review then he booked that tour and time has gone
+10. Refreshing DB?
+11. hide the entire tour if the user has already booked one and after time has passed he sees that tour (preventing duplicate reviews from)
+12. Implement My Reviews page where all the reviews are displayed and user can edit them (use React!!! SPA??)
+13. IMplement Manage page for admins, there they can create read, update , delete (tours, users, reviews and bookings) (React???)
