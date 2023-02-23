@@ -559,7 +559,7 @@ function hmrAccept(bundle, id) {
 // to polifill some features of js don't know if its actual or not
 var _loginJs = require("./login.js");
 var _updateSettingsJs = require("./updateSettings.js");
-var _mapboxJs = require("./mapbox.js");
+var _mapboxJs = require("../mapbox.js");
 var _stripeJs = require("./stripe.js");
 const mapBox = document.getElementById("map");
 const loginForm = document.querySelector(".form--login");
