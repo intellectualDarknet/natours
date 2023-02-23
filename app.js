@@ -19,8 +19,37 @@ const app = express();
 
 app.enable('trust proxy')
 
+
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
+
+// implement CORS
+// we can also allow cors on the specific route
+// we can add it as a middleware
+// 
+
+// we can allow this origin to create requests to this application
+// and this is only works for simple requests get and post requests
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }))
+
+// we have non simple requests, put patch delete, or requests that send cookies, or non standart headers
+// they require pre flight phase
+// app.use(cors({
+//   origin: 'https://www.natours.com' 
+// }))
+
+
+// allowing complex requests puts, patchs, etc
+// to all routes
+// app.options('*'. cors())
+
+// so here only the tours can be deleted, updated, put  
+// app.options('api/v1/tours/:id', cors())
+
+app.use(cors())
+
 app.use(helmet())
 
 app.use(
