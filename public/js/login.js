@@ -8,7 +8,7 @@ export const login = async (email, password) => {
   // if there is an error axious will throw error
   const res = await axios({
     method: 'POST',
-    url: 'http://localhost:5000/api/v1/users/login',
+    url: '/api/v1/users/login',
     data: {
       email,
       password
@@ -28,11 +28,10 @@ export const login = async (email, password) => {
 
 export const logout = async () => {
     // try catch block if we lose internet connection
-    console.log('logout')
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://localhost:5000/api/v1/users/logout',
+      url: '/api/v1/users/logout',
     })
     // we are logged out but we see the same structire (conditional rendering)
     // reload

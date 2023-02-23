@@ -9,7 +9,7 @@ const multerMemoStorage = multer.memoryStorage()
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
-    console.log('starts')
+    // console.log('starts')
     cb(null, true)
   } else {
     cb(new AppError('Not an image! Please upload only images', 400), false)
@@ -172,7 +172,7 @@ class TourController {
     const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1
     if (!lat || !lng) next(new AppError('Please provide latitutr and longtitude in the format lat, lng.', 400))
 
-    console.log(distance, lat, lng,  unit)
+    // console.log(distance, lat, lng,  unit)
 
     const tours = await Tour.find({ 
       startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] }} 

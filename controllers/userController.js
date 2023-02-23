@@ -38,7 +38,7 @@ const multerFilter = (req, file, cb) => {
   // mime type will always start with image for an image so 
   // lets test it 
   if (file.mimetype.startsWith('image')) {
-    console.log('starts')
+    // console.log('starts')
     cb(null, true)
   } else {
     cb(new AppError('Not an image! Please upload only images', 400), false)

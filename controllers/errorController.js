@@ -52,13 +52,11 @@ const sendErrorProd = (req, res, err) => {
       return res.status(err.statusCode).json({
         status: err.status,
         message: err.message,
-        stack: err.stack
       });
     } else {
       return res.status(500).json({
         status: 'error',
         message: 'Something went very wrong!',
-        stack: err.stack
       })
     };
   } 

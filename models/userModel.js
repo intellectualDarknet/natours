@@ -130,7 +130,7 @@ userSchema.methods.createPasswordResetToken = function() {
     .update(resetToken)
     .digest('hex');
 
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
 
   // we need to save it in schema to compare it in the future with the expires time
   // 10 min = 600s = 600 000 ms

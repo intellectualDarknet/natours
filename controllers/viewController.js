@@ -59,7 +59,7 @@ class ViewsController {
       validator: true
     })
     // to update password we have another method
-    console.log('body', req.body)
+    // console.log('body', req.body)
     //
     res.status(200).render('account', {
       title: 'Your account',
@@ -73,7 +73,7 @@ class ViewsController {
     const tourIDs = bookings.map(el => el.tour.id)
 
     const tours = await Tour.find({ _id: { $in: tourIDs }})
-    console.log('tours', tours)
+    // console.log('tours', tours)
 
     res.status(200).render('overview', {
       title: 'My Tours',

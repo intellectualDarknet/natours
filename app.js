@@ -14,12 +14,29 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser')
+const compression = require('compression')
 
 const app = express();
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 app.use(helmet())
+
+app.use(
+  helmet.contentSecurityPolicy({
+  directives: {
+  defaultSrc: ["'self'", 'https:', 'http:','data:', 'ws:'],
+  baseUri: ["'self'"],
+  fontSrc: ["'self'", 'https:','http:', 'data:'],
+  scriptSrc: [
+  "'self'",
+  'https:',
+  'http:',
+  'blob:'],
+  styleSrc: ["'self'", 'https:', 'http:',"'unsafe-inline'"]
+  }
+  })
+ );
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -52,6 +69,11 @@ app.use(hpp({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// will compress all the text that will be sent for the client
+// after deploying we will see
+app.use(compression())
+
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
@@ -66,6 +88,7 @@ app.use('/api/v1/booking', bookingRouter);
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
 
 app.use(globalErrorHandler);
 

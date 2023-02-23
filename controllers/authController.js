@@ -126,7 +126,7 @@ class AuthController {
     // Grants access to the middleware
     req.user = freshUser;
     res.locals.user = freshUser 
-    console.log(req.user);
+    // console.log(req.user);
     next();
   });
 
@@ -204,7 +204,6 @@ class AuthController {
       await new Email(user, resetURL).sendPassword()
 
     } catch (err) {
-      console.log(err.stack)
       user.createPasswordResetToken = undefined;
       user.passwordResetExpires = undefined;
       await user.save({ validateBeforeSave: false });
@@ -233,7 +232,7 @@ class AuthController {
       passwordResetToken: hashedToken,
       passwordResetExpires: { $gte: Date.now() }
     });
-    console.log(user);
+    // console.log(user);
     // 2) If token has not expired ,and ther is user, set new password
     // checking throung gte
 
@@ -246,7 +245,7 @@ class AuthController {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-    console.log('saved');
+    // console.log('saved');
     // for everything related to password and
     // user we use method save cause it starts our validators!
     // and middleware functions (encrypt!)

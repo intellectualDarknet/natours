@@ -201,10 +201,10 @@ tourSchema.pre(/^find/, async function(next) {
   next()
 })
 
-tourSchema.post(/^find/, function(docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
-  next();
-});
+// tourSchema.post(/^find/, function(docs, next) {
+//   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+//   next();
+// });
 
 // how can we count we amount of reviews on the tours???
 // throught virtual populate!

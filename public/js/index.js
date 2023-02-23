@@ -14,6 +14,7 @@ const bookBtn = document.getElementById('book-tour')
 
 console.log(mapBox)
 if (mapBox) {
+  console.log(mapBox)
   const locations = JSON.parse(mapBox.dataset.locations)
 // separate responsibilities!
   displayMap(locations)
@@ -51,7 +52,7 @@ if (userPasswordForm) {
     const passwordConfirm = document.getElementById('password-confirm').value
     document.querySelector('.btn--save-password').textContent = 'Updating...'
 
-    console.log('password', { passwordCurrent, password, passwordConfirm })
+    // console.log('password', { passwordCurrent, password, passwordConfirm })
     // async function returns promise so we catch it and set values in the fields to ''
     await updateSettings({ passwordCurrent, password, passwordConfirm }, 'password')
 
@@ -64,12 +65,10 @@ if (userPasswordForm) {
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout)
 
-console.log("bookBtn", bookBtn)
+// console.log("bookBtn", bookBtn)
 
 if (bookBtn) {
-  console.log("bookBtn", bookBtn)
   bookBtn.addEventListener('click', e => {
-    console.log('My event')
     e.target.textContent = 'Processing...'
     const tourId = e.target.dataset.tourId
     bookTour(tourId)

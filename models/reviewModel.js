@@ -68,8 +68,8 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     ratingsQuantity: stats[0]?.nRating || 0,
     ratingsAverage: stats[0]?.avgRating?.toFixed(2) || 4.5
   })
-  console.log('ReviewFunction', this)
-  console.log('stats', stats)
+  // console.log('ReviewFunction', this)
+  // console.log('stats', stats)
 }
 
 // pre -preparing
