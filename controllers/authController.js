@@ -10,15 +10,20 @@ const Email = require('../utils/email')
 
 // there are 2 authentification for on the server side and client side
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = user.createToken();
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
+    httpOnly: true,
+    //  but some services can modify (heroku) so for heroku
+      // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+      // in express we ave secre property on request and when the connecion is secure
+    secure: req.secure || req.headers('x-forwarded-proto') === 'https'
   };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // cookie can only be sent via https
+
 
   res.cookie('jwt', token, cookieOptions);
 
@@ -49,7 +54,7 @@ class AuthController {
 
     await new Email(newUser, url).sendWelcome()
 
-    createSendToken(newUser, 201, res);
+    createSendToken(newUser, 201, req, res);
   });
 
   login = catchAsync(async (req, res, next) => {
@@ -77,7 +82,7 @@ class AuthController {
     // добавим token
     // Золотое правило что можем сделать в модели делаем в модели а не в контроллере
     // создаем токен по id 2 переменная секрет 3 обьект где указываем дату окончания
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
   });
 
   protect = catchAsync(async (req, res, next) => {
@@ -250,7 +255,7 @@ class AuthController {
     // user we use method save cause it starts our validators!
     // and middleware functions (encrypt!)
 
-    createSendToken(user, 200, res);
+    createSendToken(user, 200, req, res);
   };
 
   updatePassword = catchAsync(async (req, res, next) => {
@@ -269,7 +274,7 @@ class AuthController {
   // User.findByIdAndUpdate will NOT work as intended!
 
   // 4) Log user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
   });
 }
 
