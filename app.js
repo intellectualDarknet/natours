@@ -58,6 +58,11 @@ app.use(function (req, res, next) {
     'Content-Security-Policy',
     "img-src * data: blob:;"
   );
+
+  // `img-src * data: blob: https://js.stripe.com/* https://stripe-camo.global.ssl.fastly.net/*;
+  // script-src self https://js.stripe.com/*;
+  // connect-src self https://api.stripe.com https://api.stripe.com/* https://merchant-ui-api.stripe.com https://stripe.com/cookie-settings/enforcement-mode https://merchant-ui-api.stripe.com https://r.stripe.com https://errors.stripe.com;
+  // style-src self https://js.stripe.com/v3/*;`
   next();
 })
 

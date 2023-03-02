@@ -11,8 +11,8 @@ class BookingController {
   getCheckoutSession = catchAsync(async(req, res, err) => {
     // 1) Get the currently booked tour
     const tour = await Tour.findById(req.params.tourId)
-    console.log('req.user.email', req.user)
-    // console.log('address' ,`${req.protocol}://${req.get('host')}`)
+
+    console.log('address' ,`${req.protocol}://${req.get('host')}`)
     
     // 2) Create checkout session
     const session = await stripe.checkout.sessions.create({
@@ -38,7 +38,7 @@ class BookingController {
             product_data: {
               name: `${tour.name} Tour`,
               description: tour.summary,
-              images: [`/img/tours/tour-63f4b1f7ef9984eab72195cf-1676987085622-cover.jpeg`],
+              images: [`http://localhost:5000/img/tours/tour-63f4b1f7ef9984eab72195cf-1676987085622-cover.jpeg`],
             },
           },
         },
