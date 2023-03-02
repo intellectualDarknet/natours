@@ -1,11 +1,12 @@
 // to polifill some features of js don't know if its actual or not
-import { login, logout } from './login.js'
+import { login, logout, signup } from './login.js'
 import { updateSettings } from './updateSettings.js'
 import { displayMap } from './mapbox.js'
 import { bookTour } from './stripe.js'
 
 const mapBox = document.getElementById('map')
 const loginForm = document.querySelector('.form--login')
+const sighUpForm = document.querySelector('.form--signup')
 const logOutBtn = document.querySelector('.nav__el-logout')
 const userDataForm = document.querySelector('.form-user-data')
 const userPasswordForm = document.querySelector('.form-user-password')
@@ -27,6 +28,17 @@ if (loginForm) {
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
     login(email, password)
+  })
+}
+
+if (sighUpForm) {
+  sighUpForm.addEventListener('submit', e => {
+    e.preventDefault()
+    const name = document.getElementById('name').value
+    const email = document.getElementById('email').value
+    const password = document.getElementById('password').value
+    const passwordConfirm = document.getElementById('passwordConfirm').value
+    signup(name, email, password, passwordConfirm)
   })
 }
 

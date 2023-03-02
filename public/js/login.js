@@ -2,10 +2,6 @@ import { showAlert } from './alerts.js'
 
 export const login = async (email, password) => {
   try {
-    // we can send information from here or directly from the form
-      // axious returns promise so to cathc it use await
-  // only modern browsers can use async await so be aware of that
-  // if there is an error axious will throw error
   const res = await axios({
     method: 'POST',
     url: '/api/v1/users/login',
@@ -39,5 +35,29 @@ export const logout = async () => {
   }
   catch(err) {
     showAlert('error', err.message)
+  }
+}
+
+export const signup = async (name, email, password, passwordConfirm) => {
+  console.log(name, email, password, passwordConfirm)
+  try {
+  const res = await axios({
+    method: 'POST',
+    url: '/api/v1/users/signup',
+    data: {
+      name,
+      email,
+      password,
+      passwordConfirm
+    }
+  })
+  if (res.data.status === 'success') {
+    showAlert('success', 'signed up successfully!')
+    window.setTimeout(() => {
+      location.assign('/')
+    }, 1500)
+  }} 
+  catch(err) {
+    showAlert('error', err.response.data.message)
   }
 }

@@ -2,10 +2,18 @@ const catchAsync = require("../utils/catchAsync")
 
 
 class LoginController {
-  getLoginForm = catchAsync((req, res, next) => {
 
-    res.status(200).render('login')
-  })
+  getLoginForm = (req, res) => {
+    res.status(200).render('login', {
+      title: 'Log into your account'
+    })
+  }
+
+  getSignupForm = (req, res) => {
+    res.status(200).render('signup', {
+      title: 'Sign up to your account'
+    })
+  }
 }
 
 module.exports = new LoginController()
