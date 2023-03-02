@@ -31,7 +31,7 @@ export const logout = async () => {
     })
     // we are logged out but we see the same structire (conditional rendering)
     // reload
-    if (res.data.status = 'success') location.reload(true)
+    if (res.data.status = 'success') location.assign('/')
   }
   catch(err) {
     showAlert('error', err.message)

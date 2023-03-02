@@ -11,7 +11,7 @@ class BookingController {
   getCheckoutSession = catchAsync(async(req, res, err) => {
     // 1) Get the currently booked tour
     const tour = await Tour.findById(req.params.tourId)
-
+    console.log('req.user.email', req.user)
     // console.log('address' ,`${req.protocol}://${req.get('host')}`)
     
     // 2) Create checkout session

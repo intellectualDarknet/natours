@@ -30,17 +30,11 @@ class ViewsController {
       return next(new AppError('There is no tour with that name', 404))
     }
 
-    console.log('reviews', tour.reviews)
-
-    // res.status(200).render('tour', {
-    //   title: `${tour.name}` + ' Tour',
-    //   tour: tour,
-    // })
-
-    res.status(200).json({
-      status: 'success',
-      tour: tour
+    res.status(200).render('tour', {
+      title: `${tour.name}` + ' Tour',
+      tour: tour,
     })
+
   })
 
 
