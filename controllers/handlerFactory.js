@@ -61,7 +61,7 @@ exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
   if (!doc) {
     return next(new AppError(`No model found with that ID`, 404));
   }
-
+  
   res.status(200).json({
     status: 'success',
     data: doc

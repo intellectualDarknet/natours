@@ -58,6 +58,8 @@ export const signup = async (name, email, password, passwordConfirm) => {
     }, 1500)
   }} 
   catch(err) {
-    showAlert('error', err.response.data.message)
+    let errToShow = err.response.data.message
+    if (err.response.data.message.includes('E11000 duplicate key error')) errToShow = 'This email is already taken'
+    showAlert('error', errToShow)
   }
 }

@@ -53,21 +53,13 @@ app.use(cors())
 
 app.use(helmet())
 
-app.use(
-  helmet.contentSecurityPolicy({
-  directives: {
-  defaultSrc: ["'self'", 'https:', 'http:','data:', 'ws:'],
-  baseUri: ["'self'"],
-  fontSrc: ["'self'", 'https:','http:', 'data:'],
-  scriptSrc: [
-  "'self'",
-  'https:',
-  'http:',
-  'blob:'],
-  styleSrc: ["'self'", 'https:', 'http:',"'unsafe-inline'"]
-  }
-  })
- );
+app.use(function (req, res, next) {
+  res.setHeader(
+    'Content-Security-Policy',
+    "img-src * data: blob:;"
+  );
+  next();
+})
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

@@ -75,7 +75,7 @@ class TourController {
 
   getAllTours = factory.getAll(Tour)
 
-  getTour = factory.getOne(Tour, { path: 'reviews' })
+  getTour = factory.getOne(Tour, { path: 'reviews'})
   createTour = factory.createOne(Tour)
   updateTour = factory.updateOne(Tour)
   deleteTour = factory.deleteOne(Tour)

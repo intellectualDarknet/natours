@@ -20,7 +20,6 @@ const createSendToken = (user, statusCode, req, res) => {
     //  but some services can modify (heroku) so for heroku
       // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
       // in express we ave secre property on request and when the connecion is secure
-    secure: req.secure || req.headers('x-forwarded-proto') === 'https'
   };
   // cookie can only be sent via https
 
