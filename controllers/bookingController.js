@@ -38,9 +38,6 @@ class BookingController {
     })
   })
 
-
-
-
   webhookCheckout = (req, res, next) => {
     const signature = req.headers['stripe-signature']
     let event
