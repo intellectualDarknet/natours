@@ -25,7 +25,7 @@ class BookingController {
             product_data: {
               name: `${tour.name} Tour`,
               description: tour.summary,
-              images: [`${process.env.ADDRESS}img/tours/${tour.imageCover}`],
+              images: [`https://natours-2x9t.onrender.com/img/tours/${tour.imageCover}`],
             },
           },
         },
