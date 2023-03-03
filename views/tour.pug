@@ -2,10 +2,7 @@ extends base
 
 include _reviewCard
 
-//- special sintaxsis to not to replace but 
-//- add a new lines
 block append head
-    //- we use here a script because a parsel has to compile it
     script(src='https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js')
     link(href='https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet')
 
@@ -76,9 +73,6 @@ block content
 
 
   section.section-map
-    //- we can specify data attribute in HTML
-    //- and then easily read it using Javascript
-    //- # means id
     #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
 

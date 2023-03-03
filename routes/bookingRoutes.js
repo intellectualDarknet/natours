@@ -6,9 +6,6 @@ const BookingController = require('../controllers/bookingController');
 const router = express.Router();
 
 
-// this router will be for the client to get checkout session
-
-
 router.use(AuthController.protect)
 
 router.get('/checkout-session/:tourId', BookingController.getCheckoutSession)

@@ -9,7 +9,6 @@ const multerMemoStorage = multer.memoryStorage()
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
-    // console.log('starts')
     cb(null, true)
   } else {
     cb(new AppError('Not an image! Please upload only images', 400), false)
@@ -25,19 +24,13 @@ const upload = multer({
 class TourController {
 
   uploadTourImages = upload.fields([
-    // mix of the elements image cover 1 and 3 images
     {name: 'imageCover', maxCount: 1},
     {name: 'images', maxCount: 3}
   ])
 
-  // in other case if we have multiple same elems req.file
-  // upload.array('images', 5) req.files
-
   resizeTourImages = catchAsync(async (req, res, next) => {
     if(!req.files.imageCover || !req.files.images) return next()
 
-    // 1) Cover image
-    // saving field in the db
     req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`
     await sharp(req.files.imageCover[0].buffer)
       .resize(2000, 1333)
@@ -46,22 +39,16 @@ class TourController {
       .toFile(`public/img/tours/${req.body.imageCover}`)
 
     req.body.images = []
-    // Promise all or const of 
     await Promise.all(req.files.images.map(async (file, i) => {
       const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
       await sharp(file.buffer)
         .resize(2000, 1333)
         .toFormat('jpeg')
         .jpeg({ quality: 90 })
-        // put file in public db
         .toFile(`public/img/tours/${filename}`)
       
       req.body.images.push(filename)
     }))
-
-    //  all the fields of Model update method
-    // here we just pass all the info into the fields
-
 
     next()
   })
@@ -99,9 +86,6 @@ class TourController {
       {
         $sort: { avgPrice: 1 }
       }
-      // {
-      //   $match: { _id: { $ne: 'EASY' } }
-      // }
     ]);
 
     res.status(200).json({
@@ -158,21 +142,11 @@ class TourController {
     });
   });
 
-// /tours-distance?distance=233,center=-40,45&unit=mi
-// /tours-distance/233/center/-40,45/unit/mi this path is cleaner so
-//  35.479862, 139.300207
-
   getToursWithin = catchAsync(async (req, res, next) => {
-    // getting the params from this thing
     const { distance, lanlng, unit } = req.params
-
     const [lat, lng] = lanlng.split(',')
-
-    // average radius of the earth in miles or km
     const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1
     if (!lat || !lng) next(new AppError('Please provide latitutr and longtitude in the format lat, lng.', 400))
-
-    // console.log(distance, lat, lng,  unit)
 
     const tours = await Tour.find({ 
       startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] }} 
@@ -189,17 +163,10 @@ class TourController {
     const [lat, lng] = latlng.split(',')
 
     if (!lat || !lng) next(new AppError('Please provide latitutr and longtitude in the format lat, lng.', 400))
-
-    // for geospartial aggregation there is only 1 single stage
-    // geoNear
-
-    // convertions to miles kirometrs
     const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
-
     const distances = await Tour.aggregate([
       {
         $geoNear: {
-          // from which to calculate the distances?
           near: {
             type: 'Point',
             coordinates: [lng * 1, lat * 1]

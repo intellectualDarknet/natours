@@ -26,7 +26,6 @@ const handleJWTExpiredError = () => {
 };
 
 const sendErrorDev = (req, res, err) => {
-  // if we handling api so we need full info
   if (req.originalUrl.startsWith('/api')) {
     return res.status(err.statusCode).json({
       status: err.status,
@@ -34,7 +33,6 @@ const sendErrorDev = (req, res, err) => {
       message: err.message,
       stack: err.stack
     });
-    // it means that it is a client side so we need to render error
   } 
   console.error('ERROR 💥', err);
   return res.status(err.statusCode).render('error', {
@@ -46,7 +44,6 @@ const sendErrorDev = (req, res, err) => {
 };
 
 const sendErrorProd = (req, res, err) => {
-  // Operational, trusted error: send message to client
   if (req.originalUrl.startsWith('/api')) {
     if (err.isOperational) {
       return res.status(err.statusCode).json({
@@ -80,7 +77,6 @@ module.exports = (err, req, res, next) => {
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
-    // Обработка ошибок на токен
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredToken') error = handleJWTExpiredError();
     sendErrorProd(req, res, err);

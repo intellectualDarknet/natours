@@ -1,8 +1,7 @@
 import { showAlert } from './alerts.js'
 
 export const updateSettings = async (data, type) => {
-  // password can be password or data
-  // console.log('updateSettings', data)
+
   try {
     const url = type === 'password' 
       ? '/api/v1/users/updateMyPassword' 
@@ -19,7 +18,6 @@ export const updateSettings = async (data, type) => {
     }
   }
   catch(err) {
-    // console.log('stack', err.stack)
     showAlert('error', err.response)
   }
 }

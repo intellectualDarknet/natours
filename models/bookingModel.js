@@ -20,7 +20,6 @@ const bookingSchema = new mongoose.Schema({
     type: Date, 
     default: Date.now()
   },
-  //  can be done not on the webSite: in reality with cash
   paid: {
     type: Boolean,
     default: true
@@ -29,9 +28,7 @@ const bookingSchema = new mongoose.Schema({
 })
 
 bookingSchema.pre(/^find/, function (next) {
-  // generally dont care because there are not be many calls for bookings 
-  // because only guides, and admins,
-  // will be allowed to do them
+
 
   this.populate('user').populate({
     path: 'tour',

@@ -23,14 +23,12 @@ export const login = async (email, password) => {
 }
 
 export const logout = async () => {
-    // try catch block if we lose internet connection
   try {
     const res = await axios({
       method: 'GET',
       url: '/api/v1/users/logout',
     })
-    // we are logged out but we see the same structire (conditional rendering)
-    // reload
+
     if (res.data.status = 'success') location.assign('/')
   }
   catch(err) {

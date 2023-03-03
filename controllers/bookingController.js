@@ -3,34 +3,22 @@ const Booking = require('../models/bookingModel')
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory')
 const AppError = require('../utils/appError')
-// after passing the key will get methods to work with
 const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 class BookingController {
 
   getCheckoutSession = catchAsync(async(req, res, err) => {
-    // 1) Get the currently booked tour
     const tour = await Tour.findById(req.params.tourId)
 
     console.log('address' ,`${req.protocol}://${req.get('host')}`)
     
-    // 2) Create checkout session
     const session = await stripe.checkout.sessions.create({
-      // success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}`,
-
-      // general info about session
-      // the only option to pay in stripe
       payment_method_types: ['card'],
       mode: 'payment',
-      // as soon as the payment was charged
-      // not secure at all and everyone can book a tour without a pay
-      // we go to the path / and works middleware
       success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour${tour.slug}`,
-      // 
       customer_email: req.user.email,
       client_reference_id: req.params.tourId,
-      // info about the product
       line_items: [
         {
           quantity: 1,
@@ -47,8 +35,6 @@ class BookingController {
       ],
     })
 
-    // 3) Create session as response
-
     res.status(200).json({
       status: 'success',
       session
@@ -56,7 +42,6 @@ class BookingController {
   })
 
   createBookingCheckout = async session => {
-    // this data is stored in session now!
     const tour = session.client_reference_id
     const user = (await User.findOne({ email: session.customer_email })).id
     const price = session.display_items[0].amount / 100

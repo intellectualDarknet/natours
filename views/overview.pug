@@ -1,25 +1,15 @@
 extends base
 
-//-  here we extends base so this we have block content described down here
-//- works as in classes
 
 block content 
 
   main.main
     .card-container
-
-      //- pug contains inner loops so we than call EACH   IN   
-      //- and on 1 righter  level will be called .card and everything righter than
-      //- that. So this is how cards will be builded!
       each tour in tours
         .card
           .card__header
             .card__picture
               .card__picture-overlay &nbsp;
-                //- expects string so this is why we use ES6 $
-                //- tour.imageCover is only the name so we need to connect it from the public
-                //- folder
-                //-  toLocaleString convert date in nice readable string
               img.card__picture-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
             h3.heading-tertirary
               span #{tour.name}
@@ -46,13 +36,11 @@ block content
 
           .card__footer
             p
-              //- create space between fields with |  !!!
+
               span.card__footer-value= `$${tour.price} `
               span.card__footer-text per person
             p.card__ratings
               span.card__footer-value= tour.ratingsAverage
               |
               span.card__footer-text= ` rating ${tour.ratingsQuantity} `
-              //- `/tours/${tour.slug}` starts with / because it is relative url so from the start point 
-              //- it just add tours...
             a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details

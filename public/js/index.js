@@ -1,4 +1,3 @@
-// to polifill some features of js don't know if its actual or not
 import { login, logout, signup } from './login.js'
 import { updateSettings } from './updateSettings.js'
 import { displayMap } from './mapbox.js'
@@ -18,7 +17,6 @@ console.log(mapBox)
 if (mapBox) {
   console.log(mapBox)
   const locations = JSON.parse(mapBox.dataset.locations)
-// separate responsibilities!
   displayMap(locations)
 
 }
@@ -47,12 +45,10 @@ if (userDataForm) {
   userDataForm.addEventListener('submit', e => {
     e.preventDefault()
 
-    // progromatically recreate multi-part form data
     const form = new FormData()
     form.append('name', document.getElementById('name').value)
     form.append('email', document.getElementById('email').value)
     form.append('photo', document.getElementById('photo').files[0])
-    // form will be recognized as obj in axios
     updateSettings(form, 'data')
   })
 }
@@ -65,8 +61,6 @@ if (userPasswordForm) {
     const passwordConfirm = document.getElementById('password-confirm').value
     document.querySelector('.btn--save-password').textContent = 'Updating...'
 
-    // console.log('password', { passwordCurrent, password, passwordConfirm })
-    // async function returns promise so we catch it and set values in the fields to ''
     await updateSettings({ passwordCurrent, password, passwordConfirm }, 'password')
 
     document.querySelector('.btn--save-password').textContent = 'Save password'
@@ -77,8 +71,6 @@ if (userPasswordForm) {
 }
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout)
-
-// console.log("bookBtn", bookBtn)
 
 if (bookBtn) {
   bookBtn.addEventListener('click', e => {

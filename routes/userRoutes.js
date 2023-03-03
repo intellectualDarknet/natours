@@ -12,19 +12,14 @@ router.post('/login', AuthController.login);
 router.post('/forgotPassword', AuthController.forgotPassword);
 router.patch('/resetPassword/:token', AuthController.resetPassword);
 
-// if we want to add protect to all methods 
-// it works like a middleware
-// for all the code below!
+
 router.use(AuthController.protect)
 
 router.patch('/updateMyPassword', AuthController.updatePassword);
 
 router.get('/me', UserController.getMe, UserController.getUser)
-//  single means 1 photo and photo is the field that will be updated
-//  middle which put info into middleware function
 router.patch('/updateMe', UserController.uploadUserPhoto,UserController.resizeUserPhoto, UserController.updateMe);
-// user will became unaccessible but it is still
-// okay to use delete method
+
 router.delete('/deleteMe', UserController.deleteMe);
 
 router.use(AuthController.restrictTo('admin'))
