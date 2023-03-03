@@ -13,9 +13,7 @@ const userPasswordForm = document.querySelector('.form-user-password')
 const bookBtn = document.getElementById('book-tour')
 
 
-console.log(mapBox)
 if (mapBox) {
-  console.log(mapBox)
   const locations = JSON.parse(mapBox.dataset.locations)
   displayMap(locations)
 
@@ -76,7 +74,6 @@ if (bookBtn) {
   bookBtn.addEventListener('click', e => {
     e.target.textContent = 'Processing...'
     const tourId = e.target.dataset.tourId
-    console.log(tourId)
     bookTour(tourId)
   })
 }

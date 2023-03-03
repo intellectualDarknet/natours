@@ -9,9 +9,6 @@ class BookingController {
 
   getCheckoutSession = catchAsync(async(req, res, err) => {
     const tour = await Tour.findById(req.params.tourId)
-
-    console.log('address' ,`${req.protocol}://${req.get('host')}`)
-    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',

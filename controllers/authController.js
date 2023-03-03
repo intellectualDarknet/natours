@@ -174,7 +174,6 @@ class AuthController {
   });
 
   resetPassword = async (req, res, next) => {
-    console.log('resetPasswordMethod');
     const hashedToken = crypto
       .createHash('sha256')
       .update(req.params.token)

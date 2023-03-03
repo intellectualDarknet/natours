@@ -37,7 +37,6 @@ export const logout = async () => {
 }
 
 export const signup = async (name, email, password, passwordConfirm) => {
-  console.log(name, email, password, passwordConfirm)
   try {
   const res = await axios({
     method: 'POST',
