@@ -11,6 +11,7 @@ const userRouter = require('./routes/userRoutes');
 const viewRouter = require('./routes/viewRoutes')
 const bookingRouter = require('./routes/bookingRoutes')
 const BookingController = require('./controllers/bookingController')
+const bodyparser = require('body-parser')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean');
 const hpp = require('hpp');
@@ -83,7 +84,7 @@ app.use('/api', limiter);
 
 // the reason why it is here because when we receive body from stripe
 // in a raw form (stream) not json
-app.post('/webhook-checkout', express.raw({ type: 'application/json'}), bookingController.webhookCheckout)
+app.post('/webhook-checkout', bodyparser.raw({ type: 'application/json'}), bookingController.webhookCheckout)
 
 app.use(express.json({ limit: '10kb'}));
 // after that it will be a json!
