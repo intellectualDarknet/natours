@@ -42,8 +42,8 @@ class BookingController {
     const tour = session.client_reference_id
     const user = (await User.findOne({ email: session.customer_email })).id
     const price = session.display_items[0].amount / 100
-    await Booking.create({ tour, user, price })
 
+    await Booking.create({ tour, user, price })
   }
 
 
@@ -56,7 +56,7 @@ class BookingController {
       return res.status(400).send(`Webhook error: ${err.message}`)
     }
 
-    if (event.type === 'checkout.session.completed') createBookingCheckout(event.data.object)
+    if (event.type === 'checkout.session.completed') this.createBookingCheckout(event.data.object)
    
     res.status(200).json({ received: true })
   }

@@ -19,7 +19,6 @@ const cookieParser = require('cookie-parser')
 const compression = require('compression')
 const app = express();
 const cors = require('cors');
-const bookingController = require('./controllers/bookingController');
 
 app.enable('trust proxy')
 
@@ -56,7 +55,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 
-app.post('/webhook-checkout', bodyparser.raw({ type: 'application/json'}), bookingController.webhookCheckout)
+app.post('/webhook-checkout', bodyparser.raw({ type: 'application/json' }), BookingController.webhookCheckout)
 
 app.use(express.json({ limit: '10kb'}));
 
