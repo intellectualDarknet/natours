@@ -54,10 +54,10 @@ class BookingController {
         const tour = session.client_reference_id;
         const user = (await User.findOne({ email: session.customer_email })).id;
         const price = session.amount_total / 100;  
-        const Booking = await Booking.create({ tour, user, price });
+        const newBooking = await Booking.create({ tour, user, price });
         res.status(200).json({ 
           received: true,
-          Booking
+          newBooking
         });
       } else {
         res.status(200).json({ received: true })
