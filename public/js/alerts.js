@@ -1,6 +1,6 @@
 
 // type success or error
-export const showAlert = (type, msg) => {
+export const showAlert = (type, msg, time = 7) => {
   // just to make sure
   hideAlert()
 
@@ -8,7 +8,7 @@ export const showAlert = (type, msg) => {
   document.querySelector('body').insertAdjacentHTML('afterbegin', markUp)
 
   // hide alert
-  window.setTimeout(hideAlert, 5000)
+  window.setTimeout(hideAlert, time * 1000)
 }
 
 export const hideAlert = () => {

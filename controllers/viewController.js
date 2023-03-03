@@ -30,7 +30,8 @@ class ViewsController {
       return next(new AppError('There is no tour with that name', 404))
     }
 
-    res.status(200).render('tour', {
+    res.status(200)
+    .render('tour', {
       title: `${tour.name}` + ' Tour',
       tour: tour,
     })
@@ -42,6 +43,15 @@ class ViewsController {
     res.status(200).render('account', {
       title: ''
     })
+  }
+
+  alerts = (req, res, next) => {
+    const { alert } = req.query
+    if (alert === 'booking')
+      res.locals.alert = `Your booking was successful! Please check your email for a confirmation
+      If your bookign doesn't show up here immediately, please come back later`
+    next()
+
   }
 
   updateUserData = catchAsync(async (req, res, next) => {

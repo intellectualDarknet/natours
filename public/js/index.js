@@ -3,6 +3,7 @@ import { login, logout, signup } from './login.js'
 import { updateSettings } from './updateSettings.js'
 import { displayMap } from './mapbox.js'
 import { bookTour } from './stripe.js'
+import { showAlert } from './alerts.js'
 
 const mapBox = document.getElementById('map')
 const loginForm = document.querySelector('.form--login')
@@ -87,3 +88,6 @@ if (bookBtn) {
     bookTour(tourId)
   })
 }
+
+  const alertMessage = document.querySelector('body').dataset.alertMessage
+  if (alert && alertMessage) showAlert('success', alertMessage, 20)

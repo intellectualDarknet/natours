@@ -21,6 +21,8 @@ const app = express();
 const cors = require('cors');
 const bookingController = require('./controllers/bookingController');
 
+
+
 app.enable('trust proxy')
 
 
@@ -54,20 +56,49 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(cors())
 
-app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+      baseUri: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'blob:'],
+      fontSrc: ["'self'", 'https:', 'http:', 'data:'],
+      scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:'],
+    },
+  })
+);
 
-app.use(function (req, res, next) {
-  res.setHeader(
-    'Content-Security-Policy',
-    "img-src * data: blob:;"
-  );
+
+  // 'Content-Security-Policy-Report-Only',
+  // `default-src 'self';
+  //  font-src 'self';
+  //  img-src  * data: blob:;
+  //  script-src 'self';
+  //  style-src 'self';
+  //  frame-src 'self'`
+
 
   // `img-src * data: blob: https://js.stripe.com/* https://stripe-camo.global.ssl.fastly.net/*;
   // script-src self https://js.stripe.com/*;
   // connect-src self https://api.stripe.com https://api.stripe.com/* https://merchant-ui-api.stripe.com https://stripe.com/cookie-settings/enforcement-mode https://merchant-ui-api.stripe.com https://r.stripe.com https://errors.stripe.com;
   // style-src self https://js.stripe.com/v3/*;`
-  next();
-})
+
+// generated via extension
+//   default-src 'self';
+// script-src 'report-sample' 'self' https://js.stripe.com/v3/fingerprinted/js/checkout-app-init-a822c279850e2eca137b9f8e4885208a.js;
+// style-src 'report-sample' 'self' https://js.stripe.com;
+// object-src 'none';
+// base-uri 'self';
+// connect-src 'self' https://api.stripe.com https://checkout-cookies.stripe.com https://js.stripe.com;
+// font-src 'self';
+// frame-src 'self' https://js.stripe.com;
+// img-src 'self' https://d1wqzb5bdbcre6.cloudfront.net https://js.stripe.com https://stripe-camo.global.ssl.fastly.net;
+// manifest-src 'self';
+// media-src 'self';
+// report-uri https://6401e0da4bcf83997d8b3489.endpoint.csper.io/?v=0;
+// worker-src 'none';
+
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

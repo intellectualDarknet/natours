@@ -3,8 +3,11 @@ const ViewsController = require('../controllers/viewController.js')
 const AuthController = require('../controllers/authController.js');
 const BookingController = require('../controllers/bookingController.js');
 const LoginController = require('../controllers/loginController');
+const viewController = require('../controllers/viewController.js');
 
 const router = express.Router()
+
+router.use(viewController.alerts)
 
 router.get('/', AuthController.isLoggedIn, ViewsController.getOverview)
 

@@ -25,7 +25,7 @@ class BookingController {
       // as soon as the payment was charged
       // not secure at all and everyone can book a tour without a pay
       // we go to the path / and works middleware
-      success_url: `${req.protocol}://${req.get('host')}/my-tours`,
+      success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour${tour.slug}`,
       // 
       customer_email: req.user.email,
@@ -40,7 +40,7 @@ class BookingController {
             product_data: {
               name: `${tour.name} Tour`,
               description: tour.summary,
-              images: [`${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`],
+              images: [`http://localhost:5000/img/tours/${tour.imageCover}`],
             },
           },
         },
