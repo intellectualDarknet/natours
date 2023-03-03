@@ -65,7 +65,7 @@ class BookingController {
     } catch (e) {
       res.status(200).json({ 
         received: true,
-        e
+        e: e.stack
       });
     }
 
