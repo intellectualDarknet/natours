@@ -47,19 +47,28 @@ class BookingController {
       return res.status(400).send(`Webhook error: ${err.message}`);
     }
 
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object
-      const tour = session.client_reference_id;
-      const user = (await User.findOne({ email: session.customer_email })).id;
-      const price = session.display_items[0].amount / 100;  
-      const Booking = await Booking.create({ tour, user, price });
+    try {
+      if (event.type === 'checkout.session.completed') {
+        const session = event.data.object
+        const tour = session.client_reference_id;
+        const user = (await User.findOne({ email: session.customer_email })).id;
+        const price = session.display_items[0].amount / 100;  
+        const Booking = await Booking.create({ tour, user, price });
+        res.status(200).json({ 
+          received: true,
+          Booking
+        });
+      } else {
+        res.status(200).json({ received: true })
+      }
+    } catch (e) {
       res.status(200).json({ 
         received: true,
-        Booking
+        e
       });
-    } else {
-      res.status(200).json({ received: true })
     }
+
+    
    
   }
 
