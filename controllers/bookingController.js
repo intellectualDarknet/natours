@@ -25,7 +25,7 @@ class BookingController {
             product_data: {
               name: `${tour.name} Tour`,
               description: tour.summary,
-              images: [`http://localhost:5000/img/tours/${tour.imageCover}`],
+              images: [`${process.env.ADDRESS}img/tours/${tour.imageCover}`],
             },
           },
         },
