@@ -49,11 +49,10 @@ class BookingController {
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object
-      const tour = session.client_reference_id
-      const user = (await User.findOne({ email: session.customer_email })).id
-      const price = session.display_items[0].amount / 100
-      const Booking = await Booking.create({ tour, user, price })
-    
+      const tour = session.client_reference_id;
+      const user = (await User.findOne({ email: session.customer_email })).id;
+      const price = session.display_items[0].amount / 100;  
+      const Booking = await Booking.create({ tour, user, price });
       res.status(200).json({ 
         received: true,
         Booking
