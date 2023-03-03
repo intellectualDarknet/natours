@@ -6,7 +6,7 @@ const LoginController = require('../controllers/loginController');
 
 const router = express.Router()
 
-router.get('/', BookingController.createBookingCheckoout, AuthController.isLoggedIn, ViewsController.getOverview)
+router.get('/', AuthController.isLoggedIn, ViewsController.getOverview)
 
 router.get('/login', AuthController.isLoggedIn, LoginController.getLoginForm)
 router.get('/signup', LoginController.getSignupForm)

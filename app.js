@@ -10,13 +10,15 @@ const reviewRouter = require('./routes/rewierRoutes')
 const userRouter = require('./routes/userRoutes');
 const viewRouter = require('./routes/viewRoutes')
 const bookingRouter = require('./routes/bookingRoutes')
+const BookingController = require('./controllers/bookingController')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser')
 const compression = require('compression')
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
+const bookingController = require('./controllers/bookingController');
 
 app.enable('trust proxy')
 
@@ -76,9 +78,15 @@ const limiter = rateLimit({
   message: 'Too many requests from this API, please try again in an hour',
 });
 
-app.use('/api/', limiter);
+app.use('/api', limiter);
+
+
+// the reason why it is here because when we receive body from stripe
+// in a raw form (stream) not json
+app.post('/webhook-checkout', express.raw({ type: 'application/json'}), bookingController.webhookCheckout)
 
 app.use(express.json({ limit: '10kb'}));
+// after that it will be a json!
 // to get access to the cookie
 app.use(cookieParser())
 
@@ -106,6 +114,7 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+
 
 app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
