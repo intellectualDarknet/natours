@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(cors())
 
-app.use();
+app.use(helmet());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
