@@ -22,25 +22,13 @@ const cors = require('cors');
 
 app.enable('trust proxy')
 
-
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 
 
 app.use(cors())
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
-      baseUri: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'blob:'],
-      fontSrc: ["'self'", 'https:', 'http:', 'data:'],
-      scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:'],
-    },
-  })
-);
+app.use();
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
